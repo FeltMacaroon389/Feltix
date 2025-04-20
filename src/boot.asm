@@ -87,6 +87,10 @@ clear_screen:
 .clear_loop:
 	stosw				; Store word at [EDI], increment EDI by 2
 	loop .clear_loop
+	
+	; Reset the VGA cursor
+	mov byte [cursor_row], 0
+	mov byte [cursor_col], 0
 
 	popa
 	ret
