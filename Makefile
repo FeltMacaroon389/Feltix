@@ -10,7 +10,7 @@ SRC_DIR = src
 BUILD_DIR = build
 
 # Output image name
-OUT_IMG = boot.img
+OUT_IMG = feltix.img
 
 # Emulator
 EMU = qemu-system-i386 -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
