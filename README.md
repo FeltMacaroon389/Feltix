@@ -1,8 +1,8 @@
 # Feltix
 
-## Simple operating system
+### Simple operating system
 
-### Build instructions
+#### Build instructions
 
 - Clone the repository: `git clone https://github.com/FeltMacaroon389/Feltix.git`
 
