@@ -1,18 +1,18 @@
 # Feltix
 
-### Simple operating system
-
-#### Build instructions
+### Build instructions
 
 - Install [dependencies](https://github.com/FeltMacaroon389/Feltix/tree/master#dependency-installation)
 
 - Clone the repository: `git clone https://github.com/FeltMacaroon389/Feltix.git`
 
-- Compile with `make`
+- Build with: `make`
+
+For a list of Make commands and targets, run: `make help`
 
 The output image will be located in the `build` directory.
 
-#### Dependency installation
+### Dependency installation
 
 **Required**:
 
