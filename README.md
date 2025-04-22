@@ -4,9 +4,23 @@
 
 #### Build instructions
 
+- Install dependencies (see below)
+
 - Clone the repository: `git clone https://github.com/FeltMacaroon389/Feltix.git`
 
 - Compile with `make`
 
 The output image will be located in the `build` directory.
+
+#### Dependency installation
+
+Required:
+
+- Arch Linux: `sudo pacman -Sy git nasm make`
+- Debian/Ubuntu: `sudo apt update && sudo apt install git nasm make`
+
+Optional:
+
+- Arch Linux: `sudo pacman -Sy qemu-full`
+- Debian/Ubuntu: `sudo apt update && sudo apt install qemu`
 
