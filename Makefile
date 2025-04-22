@@ -16,10 +16,20 @@ OUT_IMG = feltix.img
 EMU = qemu-system-i386 -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
 
 # Phony targets
-.PHONY: all run clean
+.PHONY: all help run clean
 
 # By default, build the image
 all: $(OUT_IMG)
+
+# Display help about this Makefile and its options
+help:
+	@echo "Usage: make <target>"
+	@echo " "
+	@echo "Targets:"
+	@echo "    $(OUT_IMG) - Compile the final output image"
+	@echo "    run - Compile the image and run it in an emulator (QEMU by default)"
+	@echo "    clean - Remove build files"
+	@echo " "
 
 # Build the image
 $(OUT_IMG):
