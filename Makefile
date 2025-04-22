@@ -1,4 +1,4 @@
-# FeltixBoot Makefile
+# Feltix Makefile
 # v0.1.0
 
 # Assembler and flags
