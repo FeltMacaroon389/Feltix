@@ -1,5 +1,5 @@
 ; --- FELTIX BOOTLOADER ---
-; v0.1.1
+; v0.1.2
 
 BITS 16		; Start in 16-bit real mode
 ORG 0x7C00	; Origin - The BIOS loads us at 0x7C00
