@@ -11,7 +11,7 @@ ORG 0x7C00	; Origin - The BIOS loads us at 0x7C00
 disk db 0
 
 ; Program entrypoint
-; Here we generally just focus on getting 32-bit up and running
+; Here we generally just focus on loading additional sectors and getting 32-bit up and running
 start:
 	; Disable hardware interrupts
 	cli
@@ -21,7 +21,7 @@ start:
         mov ds, ax      ; Set DS
         mov es, ax      ; Set ES
 
-	; Reading sectors
+	; Load sectors from disk
 	mov [disk], dl 				; Stashing disk number
 	mov ah, 0x2 				; BIOS interrupt for reading sectors from disk
 	mov al, 1 				; Sectors to read
@@ -43,6 +43,7 @@ start:
 	; Jump to 32-bit entry
 	jmp 0x08:protected_mode_entry
 
+
 ; Define the 32-bit GDT structure
 gdt32_start:
 	dq 0x0000000000000000		; Null descriptor
@@ -57,7 +58,6 @@ gdt32_end:
 
 
 ; 32-bit entry
-; This is where the *real* program begins
 BITS 32
 protected_mode_entry:
 	; Reload the segment registers
@@ -80,10 +80,15 @@ protected_mode_entry:
 ; Other BIOS boot sector formalities
 times 510 - ($ - $$) db 0 	; Pad to 510 bytes
 dw 0xAA55			; Boot signature
+; --- END OF BOOT SECTOR ---
 
 
 ; Start of sector 2
 BITS 32
+
+
+; Main userspace function
+; Add any I/O functionality here
 main:
 	; Clear the screen
 	call clear_screen
