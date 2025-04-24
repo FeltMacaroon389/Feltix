@@ -46,14 +46,32 @@ start:
 
 ; Define the 32-bit GDT structure
 gdt32_start:
-	dq 0x0000000000000000		; Null descriptor
-	dq 0x00CF9A000000FFFF		; Code segment (base 0, limit 0xFFFFF, 32-bit)
-	dq 0x00CF92000000FFFF		; Data segment
+	dq 0x0		; Null descriptor
 
+; Code segment
+gdt32_code:
+	dw 0xFFFF
+	dw 0x0
+	db 0x0
+	db 10011010b
+	db 11001111b
+	db 0x0
+
+; Data segment
+gdt32_data:
+	dw 0xFFFF
+	dw 0x0
+	db 0x0
+	db 10010010b
+	db 11001111b
+	db 0x0
+
+; GDT descriptor containing necessary information for LGDT
 gdt32_definition:
-	dw gdt32_end - gdt32_start - 1	; GDT size in bytes
-	dd gdt32_start			; Address of the GDT
+	dw gdt32_end - gdt32_start
+	dd gdt32_start
 
+; End of GDT
 gdt32_end:
 
 
