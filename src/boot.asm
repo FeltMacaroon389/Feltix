@@ -1,4 +1,4 @@
-; --- FELTIX BOOTLOADER ---
+;d034fa307ac9 --- FELTIX BOOTLOADER ---
 ; v0.1.1
 
 BITS 16		; Start in 16-bit real mode
@@ -24,14 +24,15 @@ start:
 	; Load sectors from disk
 	mov [disk], dl 				; Stashing disk number
 	mov ah, 0x2 				; BIOS interrupt for reading sectors from disk
-	mov al, 1 				; Sectors to read
+	mov al, 1 				; Sectors to load
 	mov ch, 0 				; Cylinder index
 	mov dh, 0 				; Head index
 	mov cl, 2 				; Sector index
 	mov dl, [disk] 				; Disk index
 	mov bx, main	 			; Target pointer (MUST be after the boot sector)
 	int 0x13 				; Call BIOS
-	
+	jc .disk_error				; Jump to .disk_error upon failure
+
 	; Set up the 32-bit GDT
 	lgdt [gdt32_definition]
 
@@ -42,6 +43,35 @@ start:
 	
 	; Jump to 32-bit entry
 	jmp 0x08:protected_mode_entry
+
+; Upon a disk error
+.disk_error:
+	; Print error message
+	mov si, disk_error_message
+	call print_string_16
+
+	; Halt the CPU
+	hlt
+
+; Disk error message
+disk_error_message db "Fatal error: Error Loading From Disk", 0
+
+
+; Function for printing strings in 16-bit real mode
+print_string_16:
+	lodsb			; Load byte at DS:SI into AL, increment SI
+	or al, al		; Check for null terminator
+	jz .done		; Jump to .done if null terminator
+
+	mov ah, 0x0E		; BIOS teletype output function
+	mov bh, 0x00		; Page number
+	mov bl, 0x07		; Text attribute (light gray on black)
+	int 0x10		; Call the BIOS
+	jmp print_string_16	; Continue the loop
+
+.done:
+	; Return from the function
+	ret
 
 
 ; Define the 32-bit GDT structure
