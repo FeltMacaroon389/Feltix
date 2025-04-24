@@ -7,16 +7,30 @@ ORG 0x7C00	; Origin - The BIOS loads us at 0x7C00
 ; VGA base address definition
 %define VGA_BASE_ADDRESS 0xB8000
 
+; Disk variable
+disk db 0
+
 ; Program entrypoint
 ; Here we generally just focus on getting 32-bit up and running
 start:
 	; Disable hardware interrupts
 	cli
 	
-	; Set up segment registers
-	xor ax, ax	; Set AX
-	mov ds, ax	; Set DS
-	mov es, ax	; Set ES
+        ; Set up segment registers
+        xor ax, ax      ; Set AX
+        mov ds, ax      ; Set DS
+        mov es, ax      ; Set ES
+
+	; Reading sectors
+	mov [disk], dl 				; Stashing disk number
+	mov ah, 0x2 				; BIOS interrupt for reading sectors from disk
+	mov al, 1 				; Sectors to read
+	mov ch, 0 				; Cylinder index
+	mov dh, 0 				; Head index
+	mov cl, 2 				; Sector index
+	mov dl, [disk] 				; Disk index
+	mov bx, main	 			; Target pointer (MUST be after the boot sector)
+	int 0x13 				; Call BIOS
 	
 	; Set up the 32-bit GDT
 	lgdt [gdt32_definition]
@@ -60,11 +74,16 @@ protected_mode_entry:
 	cursor_col db 0
 
 	; Jump to the main userspace function
-	jmp main
+	jmp 0x08:main	; Far jump
 
 
-; Main userspace function
-; Do any I/O functions here
+; Other BIOS boot sector formalities
+times 510 - ($ - $$) db 0 	; Pad to 510 bytes
+dw 0xAA55			; Boot signature
+
+
+; Start of sector 2
+BITS 32
 main:
 	; Clear the screen
 	call clear_screen
@@ -72,92 +91,92 @@ main:
 	; Print welcome message
 	mov esi, welcome_message
 	call print_string
-
+	
 	; Halt the CPU; we're done here
+	cli
 	hlt
 
 
 ; Function to clear the VGA screen (fill with black spaces)
 clear_screen:
-	pusha
-	mov edi, VGA_BASE_ADDRESS	; Start of VGA text Buffer
-	mov ecx, 80 * 25		; Number of cells
-	mov ax, 0x0720			; Attribute + space character
+        pusha
+        mov edi, VGA_BASE_ADDRESS       ; Start of VGA text Buffer
+        mov ecx, 80 * 25                ; Number of cells
+        mov ax, 0x0720                  ; Attribute + space character
 
 .clear_loop:
-	stosw				; Store word at [EDI], increment EDI by 2
-	loop .clear_loop
-	
-	; Reset the VGA cursor
-	mov byte [cursor_row], 0
-	mov byte [cursor_col], 0
+        stosw                           ; Store word at [EDI], increment EDI by 2
+        loop .clear_loop
 
-	popa
-	ret
+        ; Reset the VGA cursor
+        mov byte [cursor_row], 0
+        mov byte [cursor_col], 0
+
+        popa
+        ret
 
 
 ; Function to print a string to VGA
 print_string:
-	pusha
+        pusha
 
-	mov edi, VGA_BASE_ADDRESS	; Start of VGA text buffer
-	mov ah, 0x07			; Attribute: light grey on black
+        mov edi, VGA_BASE_ADDRESS       ; Start of VGA text buffer
+        mov ah, 0x07                    ; Attribute: light grey on black
 
 .print_loop:
-	lodsb				; Load byte from ESI into AL, advance ESI
-	cmp al, 0			; Check AL for a null terminator
-	je .done			; Jump to .done
-	
-	cmp al, 0x0A			; Check AL for a newline (0x0A)
-	je .newline			; Jump to .newline
+        lodsb                           ; Load byte from ESI into AL, advance ESI
+        cmp al, 0                       ; Check AL for a null terminator
+        je .done                        ; Jump to .done
 
-	; Load VGA cursor position
-	movzx ebx, byte [cursor_row]
-	movzx ecx, byte [cursor_col]
+        cmp al, 0x0A                    ; Check AL for a newline (0x0A)
+        je .newline                     ; Jump to .newline
 
-	; Calculate offset: (row * 80 + col) * 2
-	mov edx, ebx
-	imul edx, 80
-	add edx, ecx
-	imul edx, 2			; Each character is 2 bytes
-	add edx, 0xB8000		; Start of VGA text buffer
+        ; Load VGA cursor position
+        movzx ebx, byte [cursor_row]
+        movzx ecx, byte [cursor_col]
 
-	mov [edx], ax			; Print character + attribute
+        ; Calculate offset: (row * 80 + col) * 2
+        mov edx, ebx
+        imul edx, 80
+        add edx, ecx
+        imul edx, 2                     ; Each character is 2 bytes
+        add edx, 0xB8000                ; Start of VGA text buffer
 
-	; Move cursor forward
-	inc byte [cursor_col]
-	cmp byte [cursor_col], 80
-	jl .print_loop
+        mov [edx], ax                   ; Print character + attribute
 
-	; New line
-	mov byte [cursor_col], 0
-	inc byte [cursor_row]
-	cmp byte [cursor_row], 25
-	jl .print_loop
+        ; Move cursor forward
+        inc byte [cursor_col]
+        cmp byte [cursor_col], 80
+        jl .print_loop
 
-	; If we reached the bottom, reset
-	mov byte [cursor_row], 0
-	jmp .print_loop
+        ; New line
+        mov byte [cursor_col], 0
+        inc byte [cursor_row]
+        cmp byte [cursor_row], 25
+        jl .print_loop
+
+        ; If we reached the bottom, reset
+        mov byte [cursor_row], 0
+        jmp .print_loop
 
 .newline:
-	mov byte [cursor_col], 0
-	inc byte [cursor_row]
-	cmp byte [cursor_row], 25
-	jl .print_loop
+        mov byte [cursor_col], 0
+        inc byte [cursor_row]
+        cmp byte [cursor_row], 25
+        jl .print_loop
 
-	mov byte [cursor_row], 0
-	jmp .print_loop
+        mov byte [cursor_row], 0
+        jmp .print_loop
 
 .done:
-	popa
-	ret
+        popa
+        ret
 
 
 ; Put your message variables here
 welcome_message db "Welcome to Feltix!", 0x0A, 0
 
 
-; Other BIOS boot formalities
-times 510 - ($ - $$) db 0 	; Pad to 510 bytes
-dw 0xAA55			; Boot signature
+; Pad to 1024 bytes
+times 1024 - ($ - $$) db 0
 
