@@ -119,9 +119,19 @@ protected_mode_entry:
 	; Variables for keeping track of VGA cursor
 	cursor_row db 0
 	cursor_col db 0
+	
+	; Clear the screen
+	call clear_screen
 
+	; Print boot message
+	mov esi, boot_message
+	call print_string
+	
 	; Jump to the main userspace function
 	jmp 0x08:main	; Far jump
+
+; Boot message
+boot_message db "Booting...", 0x0A, 0
 
 
 ; Other BIOS boot sector formalities
