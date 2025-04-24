@@ -1,4 +1,4 @@
-;d034fa307ac9 --- FELTIX BOOTLOADER ---
+; --- FELTIX BOOTLOADER ---
 ; v0.1.1
 
 BITS 16		; Start in 16-bit real mode
@@ -20,7 +20,7 @@ start:
         xor ax, ax      ; Set AX
         mov ds, ax      ; Set DS
         mov es, ax      ; Set ES
-
+	
 	; Load sectors from disk
 	mov [disk], dl 				; Stashing disk number
 	mov ah, 0x2 				; BIOS interrupt for reading sectors from disk
@@ -28,14 +28,13 @@ start:
 	mov ch, 0 				; Cylinder index
 	mov dh, 0 				; Head index
 	mov cl, 2 				; Sector index
-	mov dl, [disk] 				; Disk index
 	mov bx, main	 			; Target pointer (MUST be after the boot sector)
 	int 0x13 				; Call BIOS
 	jc .disk_error				; Jump to .disk_error upon failure
-
+	
 	; Set up the 32-bit GDT
 	lgdt [gdt32_definition]
-
+	
 	; Set PE bit in EFLAGS to enable protected mode (32-bit)
 	mov eax, cr0	; Get the value of CR0
 	or eax, 0x1	; Set the PE (protected mode enable) bit
@@ -49,7 +48,7 @@ start:
 	; Print error message
 	mov si, disk_error_message
 	call print_string_16
-
+	
 	; Halt the CPU
 	hlt
 
@@ -150,6 +149,10 @@ main:
 	hlt
 
 
+; Welcome message
+welcome_message db "Welcome to Feltix!", 0x0A, 0
+
+
 ; Function to clear the VGA screen (fill with black spaces)
 clear_screen:
         pusha
@@ -224,10 +227,6 @@ print_string:
 .done:
         popa
         ret
-
-
-; Put your message variables here
-welcome_message db "Welcome to Feltix!", 0x0A, 0
 
 
 ; Pad to 1024 bytes
