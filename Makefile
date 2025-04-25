@@ -1,5 +1,4 @@
 # Feltix Makefile
-# v0.1.0
 
 # Tools
 AS = nasm

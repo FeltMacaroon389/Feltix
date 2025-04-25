@@ -1,7 +1,7 @@
 ; --- FELTIX BOOTLOADER ---
-; v0.1.2
 
-BITS 16		; Start in 16-bit real mode
+; Start in 16-bit real mode
+BITS 16
 
 ; VGA base address definition
 %define VGA_BASE_ADDRESS 0xB8000
