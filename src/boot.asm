@@ -11,7 +11,7 @@ ORG 0x7C00	; Origin - The BIOS loads us at 0x7C00
 disk db 0
 
 ; Program entrypoint
-; Here we generally just focus on loading additional sectors and getting 32-bit up and running
+; Here we generally just focus on loading additional sectors and getting 32-bit protected mode up and running
 start:
 	; Disable hardware interrupts
 	cli
@@ -28,7 +28,7 @@ start:
 	; Load sectors from disk
 	mov [disk], dl 		; Stashing disk number
 	mov ah, 0x2 		; BIOS interrupt for reading sectors from disk
-	mov al, 1 		; Sectors to load
+	mov al, 111 		; Sectors to load
 	mov ch, 0 		; Cylinder index
 	mov dh, 0 		; Head index
 	mov cl, 2 		; Sector index
@@ -57,7 +57,7 @@ start:
 	hlt
 
 ; Boot message
-boot_message db "Booting...", 0
+boot_message db "Booting...", 0x0A, 0x0A, 0
 
 ; Disk error message
 disk_error_message db "Fatal error: Error Loading From Disk", 0
@@ -68,11 +68,31 @@ print_string_16:
 	lodsb			; Load byte at DS:SI into AL, increment SI
 	or al, al		; Check for null terminator
 	jz .done		; Jump to .done if null terminator
+	
+	cmp al, 0x0A		; Check for newline (LF)
+	jz .newline		; Jump to .newline if newline
 
 	mov ah, 0x0E		; BIOS teletype output function
 	mov bh, 0x00		; Page number
 	mov bl, 0x07		; Text attribute (light gray on black)
-	int 0x10		; Call the BIOS
+	int 0x10		; Call BIOS
+	jmp print_string_16	; Continue the loop
+
+.newline:
+	; Print carriage return (\r)
+	mov al, 0x0D
+	mov ah, 0x0E
+	mov bh, 0x00
+	mov bl, 0x07
+	int 0x10
+
+	; Print line feed (\n)
+	mov al, 0x0A
+	mov ah, 0x0E
+	mov bh, 0x00
+	mov bl, 0x07
+	int 0x10
+
 	jmp print_string_16	; Continue the loop
 
 .done:
@@ -107,11 +127,11 @@ gdt32_definition:
 	dw gdt32_end - gdt32_start
 	dd gdt32_start
 
-; End of GDT
+; End of 32-bit GDT
 gdt32_end:
 
 
-; 32-bit entry
+; 32-bit protected mode entry
 BITS 32
 protected_mode_entry:
 	; Reload the segment registers
