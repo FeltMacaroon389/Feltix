@@ -18,8 +18,9 @@ BUILD_DIR = build
 # Output image name
 OUT_IMG = feltix.img
 
-# Emulator
-EMU = qemu-system-i386 -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
+# Emulator and flags
+EMU = qemu-system-i386
+EMUFLAGS = -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
 
 # Phony targets
 .PHONY: all help run clean
@@ -47,7 +48,7 @@ $(OUT_IMG):
 
 # Run the image in an emulator
 run: $(OUT_IMG)
-	$(EMU)
+	$(EMU) $(EMUFLAGS)
 
 # Clean build files
 clean:
