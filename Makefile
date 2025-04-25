@@ -1,12 +1,19 @@
 # Feltix Makefile
 # v0.1.0
 
-# Assembler and flags
+# Tools
 AS = nasm
-ASFLAGS = -f bin
+LD = i386-elf-ld
+OBJCOPY = i386-elf-objcopy
+
+# Parameters
+ASFLAGS = -f elf32
+LDFLAGS = -m elf_i386 -T linker.ld
+OBJCOPYFLAGS = -O binary
 
 # Directories
 SRC_DIR = src
+OBJ_DIR = obj
 BUILD_DIR = build
 
 # Output image name
@@ -33,8 +40,11 @@ help:
 
 # Build the image
 $(OUT_IMG):
-	mkdir -p $(BUILD_DIR)
-	$(AS) $(ASFLAGS) $(SRC_DIR)/boot.asm -o $(BUILD_DIR)/$(OUT_IMG)
+	mkdir -p $(OBJ_DIR) $(BUILD_DIR)
+
+	$(AS) $(ASFLAGS) $(SRC_DIR)/boot.asm -o $(OBJ_DIR)/boot.o
+	$(LD) $(LDFLAGS) -o $(BUILD_DIR)/feltix.elf $(OBJ_DIR)/boot.o
+	$(OBJCOPY) $(OBJCOPYFLAGS) $(BUILD_DIR)/feltix.elf $(BUILD_DIR)/$(OUT_IMG)
 
 # Run the image in an emulator
 run: $(OUT_IMG)
@@ -42,5 +52,5 @@ run: $(OUT_IMG)
 
 # Clean build files
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(OBJ_DIR) $(BUILD_DIR)
 
