@@ -28,7 +28,7 @@ start:
 	; Load sectors from disk
 	mov [disk], dl 		; Stashing disk number
 	mov ah, 0x2 		; BIOS interrupt for reading sectors from disk
-	mov al, 111 		; Sectors to load
+	mov al, 1 		; Sectors to load
 	mov ch, 0 		; Cylinder index
 	mov dh, 0 		; Head index
 	mov cl, 2 		; Sector index
