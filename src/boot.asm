@@ -21,16 +21,20 @@ start:
         mov ds, ax      ; Set DS
         mov es, ax      ; Set ES
 	
+	; Print boot message
+	mov si, boot_message
+	call print_string_16
+
 	; Load sectors from disk
-	mov [disk], dl 				; Stashing disk number
-	mov ah, 0x2 				; BIOS interrupt for reading sectors from disk
-	mov al, 1 				; Sectors to load
-	mov ch, 0 				; Cylinder index
-	mov dh, 0 				; Head index
-	mov cl, 2 				; Sector index
-	mov bx, main	 			; Target pointer (MUST be after the boot sector)
-	int 0x13 				; Call BIOS
-	jc .disk_error				; Jump to .disk_error upon failure
+	mov [disk], dl 		; Stashing disk number
+	mov ah, 0x2 		; BIOS interrupt for reading sectors from disk
+	mov al, 1 		; Sectors to load
+	mov ch, 0 		; Cylinder index
+	mov dh, 0 		; Head index
+	mov cl, 2 		; Sector index
+	mov bx, main	 	; Target pointer (MUST be after the boot sector)
+	int 0x13 		; Call BIOS
+	jc .disk_error		; Jump to .disk_error upon failure
 	
 	; Set up the 32-bit GDT
 	lgdt [gdt32_definition]
@@ -51,6 +55,9 @@ start:
 	
 	; Halt the CPU
 	hlt
+
+; Boot message
+boot_message db "Booting...", 0
 
 ; Disk error message
 disk_error_message db "Fatal error: Error Loading From Disk", 0
@@ -119,19 +126,9 @@ protected_mode_entry:
 	; Variables for keeping track of VGA cursor
 	cursor_row db 0
 	cursor_col db 0
-	
-	; Clear the screen
-	call clear_screen
 
-	; Print boot message
-	mov esi, boot_message
-	call print_string
-	
 	; Jump to the main userspace function
 	jmp 0x08:main	; Far jump
-
-; Boot message
-boot_message db "Booting...", 0x0A, 0
 
 
 ; Other BIOS boot sector formalities
@@ -152,7 +149,7 @@ main:
 	
 	; Print welcome message
 	mov esi, welcome_message
-	call print_string
+	call print_string_vga
 	
 	; Halt the CPU; we're done here
 	cli
@@ -183,7 +180,7 @@ clear_screen:
 
 
 ; Function to print a string to VGA
-print_string:
+print_string_vga:
         pusha
 
         mov edi, VGA_BASE_ADDRESS       ; Start of VGA text buffer
