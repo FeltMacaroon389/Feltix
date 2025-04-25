@@ -165,11 +165,11 @@ BITS 32
 ; Add any I/O functionality here
 main:
 	; Clear the screen
-	call clear_screen
+	call clear_screen_32
 	
 	; Print welcome message
 	mov esi, welcome_message
-	call print_string_vga
+	call print_string_32
 	
 	; Halt the CPU; we're done here
 	cli
@@ -180,8 +180,8 @@ main:
 welcome_message db "Welcome to Feltix!", 0x0A, 0
 
 
-; Function to clear the VGA screen (fill with black spaces)
-clear_screen:
+; Function to clear the VGA screen (fill with black spaces) in 32-bit protected mode
+clear_screen_32:
         pusha
         mov edi, VGA_BASE_ADDRESS       ; Start of VGA text Buffer
         mov ecx, 80 * 25                ; Number of cells
@@ -199,8 +199,8 @@ clear_screen:
         ret
 
 
-; Function to print a string to VGA
-print_string_vga:
+; Function to print a string to VGA in 32-bit protected mode
+print_string_32:
         pusha
 
         mov edi, VGA_BASE_ADDRESS       ; Start of VGA text buffer
