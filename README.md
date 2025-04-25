@@ -14,13 +14,25 @@ The output image will be located in the `build` directory.
 
 ### Dependency installation
 
-**Required**:
+#### **Required**:
 
-- Arch Linux: `sudo pacman -Sy git nasm make`
-- Debian/Ubuntu: `sudo apt update && sudo apt install git nasm make`
+**Arch Linux**: 
+- Run: `sudo pacman -Sy git nasm make`
+- You will also require GNU binutils for the **i386** CPU architecture. This can be installed from the [AUR](https://aur.archlinux.org/packages/i386-elf-binutils)
+- Run: `git clone https://aur.archlinux.org/i386-elf-binutils.git`
+- Next, `cd i386-elf-binutils`
+- Finally, `makepkg -si`
+- You may be prompted for your password during this.
 
-**Optional**:
+**Debian/Ubuntu**: 
+- Do: `sudo apt update && sudo apt install git nasm make`
+- You will also require GNU binutils for the **i386** CPU architecture. We suggest you follow [this guide](https://wiki.osdev.org/OS_Specific_Toolchain).
 
-- Arch Linux: `sudo pacman -Sy qemu-full`
-- Debian/Ubuntu: `sudo apt update && sudo apt install qemu`
+#### **Optional**:
+
+**Arch Linux**: 
+- Run: `sudo pacman -Sy qemu-full`
+
+**Debian/Ubuntu**:
+- Run: `sudo apt update && sudo apt install qemu`
 
