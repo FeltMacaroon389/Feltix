@@ -3,6 +3,10 @@
 ; Start in 16-bit real mode
 BITS 16
 
+; Define program entrypoint
+section .text
+	global start
+
 ; VGA base address definition
 %define VGA_BASE_ADDRESS 0xB8000
 
