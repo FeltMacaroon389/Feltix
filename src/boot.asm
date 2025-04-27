@@ -170,35 +170,16 @@ BITS 32
 main:
 	; Disable hardware interrupts
 	cli
-
-	; Clear the screen
-	call clear_screen_32
 	
 	; Call kernel_main
 	extern kernel_main
 	call kernel_main
+	
+	; Any following code in this functionwill only execute if the kernel ever returns
+	; (which it probably shouldn't if you've set it up correctly)
 
 	; Halt the CPU; we're done here
 	hlt
-
-
-; Function to clear the VGA screen (fill with black spaces) in 32-bit protected mode
-clear_screen_32:
-        pusha
-        mov edi, VGA_BASE_ADDRESS       ; Start of VGA text Buffer
-        mov ecx, 80 * 25                ; Number of cells
-        mov ax, 0x0720                  ; Attribute + space character
-
-.clear_loop:
-        stosw                           ; Store word at [EDI], increment EDI by 2
-        loop .clear_loop
-
-        ; Reset the VGA cursor
-        mov byte [cursor_row], 0
-        mov byte [cursor_col], 0
-
-        popa
-        ret
 
 ; Pad to 1024 bytes
 times 1024 - ($ - $$) db 0
