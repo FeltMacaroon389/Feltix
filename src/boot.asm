@@ -175,7 +175,7 @@ main:
 	extern kernel_main
 	call kernel_main
 	
-	; Any following code in this functionwill only execute if the kernel ever returns
+	; Any following code in this function will only execute if the kernel ever returns
 	; (which it probably shouldn't if you've set it up correctly)
 
 	; Halt the CPU; we're done here
