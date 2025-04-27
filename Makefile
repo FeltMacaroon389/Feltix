@@ -2,12 +2,12 @@
 
 # Tools
 AS = nasm
-LD = i386-elf-ld
+CC = i386-elf-gcc
 OBJCOPY = i386-elf-objcopy
 
 # Parameters
 ASFLAGS = -f elf32
-LDFLAGS = -m elf_i386 -T linker.ld
+CCFLAGS = -nostdinc -nostdlib -ffreestanding -T linker.ld -I./include -std=gnu99
 OBJCOPYFLAGS = -O binary
 
 # Directories
@@ -18,9 +18,8 @@ BUILD_DIR = build
 # Output image name
 OUT_IMG = feltix.img
 
-# Emulator and flags
-EMU = qemu-system-i386
-EMUFLAGS = -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
+# Emulator
+EMU = qemu-system-i386 -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
 
 # Phony targets
 .PHONY: all help run clean
@@ -43,12 +42,13 @@ $(OUT_IMG):
 	mkdir -p $(OBJ_DIR) $(BUILD_DIR)
 
 	$(AS) $(ASFLAGS) $(SRC_DIR)/boot.asm -o $(OBJ_DIR)/boot.o
-	$(LD) $(LDFLAGS) -o $(BUILD_DIR)/feltix.elf $(OBJ_DIR)/boot.o
-	$(OBJCOPY) $(OBJCOPYFLAGS) $(BUILD_DIR)/feltix.elf $(BUILD_DIR)/$(OUT_IMG)
+	$(CC) $(CCFLAGS) $(SRC_DIR)/kernel.c $(OBJ_DIR)/boot.o -o $(OBJ_DIR)/feltix.o
+	
+	$(OBJCOPY) $(OBJCOPYFLAGS) $(OBJ_DIR)/feltix.o $(BUILD_DIR)/$(OUT_IMG)
 
 # Run the image in an emulator
 run: $(OUT_IMG)
-	$(EMU) $(EMUFLAGS)
+	$(EMU)
 
 # Clean build files
 clean:

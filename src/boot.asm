@@ -1,17 +1,22 @@
 ; --- FELTIX BOOTLOADER ---
 
+; Bootloader section
+section .bootloader
+
 ; Start in 16-bit real mode
 BITS 16
 
 ; Define program entrypoint
-section .text
-	global start
+global start
 
 ; VGA base address definition
 %define VGA_BASE_ADDRESS 0xB8000
 
 ; Disk variable
 disk db 0
+
+; Amount of sectors to load
+sectors db 2
 
 ; Program entrypoint
 ; Here we generally just focus on loading additional sectors and getting 32-bit protected mode up and running
@@ -31,7 +36,7 @@ start:
 	; Load sectors from disk
 	mov [disk], dl 		; Stashing disk number
 	mov ah, 0x2 		; BIOS interrupt for reading sectors from disk
-	mov al, 1 		; Sectors to load
+	mov al, [sectors]	; Sectors to load
 	mov ch, 0 		; Cylinder index
 	mov dh, 0 		; Head index
 	mov cl, 2 		; Sector index
@@ -157,7 +162,6 @@ protected_mode_entry:
 ; Other BIOS boot sector formalities
 times 510 - ($ - $$) db 0 	; Pad to 510 bytes
 dw 0xAA55			; Boot signature
-; --- END OF BOOT SECTOR ---
 
 
 ; Start of sector 2
@@ -167,20 +171,18 @@ BITS 32
 ; Main userspace function
 ; Add any I/O functionality here
 main:
+	; Disable hardware interrupts
+	cli
+
 	; Clear the screen
 	call clear_screen_32
 	
-	; Print welcome message
-	mov esi, welcome_message
-	call print_string_32
-	
+	; Call kernel_main
+	extern kernel_main
+	call kernel_main
+
 	; Halt the CPU; we're done here
-	cli
 	hlt
-
-
-; Welcome message
-welcome_message db "Welcome to Feltix!", 0x0A, 0
 
 
 ; Function to clear the VGA screen (fill with black spaces) in 32-bit protected mode
@@ -200,64 +202,6 @@ clear_screen_32:
 
         popa
         ret
-
-
-; Function to print a string to VGA in 32-bit protected mode
-print_string_32:
-        pusha
-
-        mov edi, VGA_BASE_ADDRESS       ; Start of VGA text buffer
-        mov ah, 0x07                    ; Attribute: light grey on black
-
-.print_loop:
-        lodsb                           ; Load byte from ESI into AL, advance ESI
-        cmp al, 0                       ; Check AL for a null terminator
-        je .done                        ; Jump to .done
-
-        cmp al, 0x0A                    ; Check AL for a newline (0x0A)
-        je .newline                     ; Jump to .newline
-
-        ; Load VGA cursor position
-        movzx ebx, byte [cursor_row]
-        movzx ecx, byte [cursor_col]
-
-        ; Calculate offset: (row * 80 + col) * 2
-        mov edx, ebx
-        imul edx, 80
-        add edx, ecx
-        imul edx, 2                     ; Each character is 2 bytes
-        add edx, 0xB8000                ; Start of VGA text buffer
-
-        mov [edx], ax                   ; Print character + attribute
-
-        ; Move cursor forward
-        inc byte [cursor_col]
-        cmp byte [cursor_col], 80
-        jl .print_loop
-
-        ; New line
-        mov byte [cursor_col], 0
-        inc byte [cursor_row]
-        cmp byte [cursor_row], 25
-        jl .print_loop
-
-        ; If we reached the bottom, reset
-        mov byte [cursor_row], 0
-        jmp .print_loop
-
-.newline:
-        mov byte [cursor_col], 0
-        inc byte [cursor_row]
-        cmp byte [cursor_row], 25
-        jl .print_loop
-
-        mov byte [cursor_row], 0
-        jmp .print_loop
-
-.done:
-        popa
-        ret
-
 
 ; Pad to 1024 bytes
 times 1024 - ($ - $$) db 0
