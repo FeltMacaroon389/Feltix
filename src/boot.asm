@@ -9,9 +9,6 @@ BITS 16
 ; Define program entrypoint
 global start
 
-; VGA base address definition
-%define VGA_BASE_ADDRESS 0xB8000
-
 ; Disk variable
 disk db 0
 
