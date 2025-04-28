@@ -33,6 +33,8 @@ help:
 	@echo "Usage: make <target>"
 	@echo " "
 	@echo "Targets:"
+	@echo "    <NO OPTIONS> - same as $(OUT_IMG)"
+	@echo "    help - Display this help menu"
 	@echo "    $(OUT_IMG) - Compile the final output image"
 	@echo "    run - Compile the image and run it in an emulator (QEMU by default)"
 	@echo "    clean - Remove build files"
