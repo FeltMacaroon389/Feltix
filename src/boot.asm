@@ -13,7 +13,7 @@ global start
 disk db 0
 
 ; Amount of sectors to load
-sectors db 2
+sectors db 3
 
 ; Program entrypoint
 ; Here we generally just focus on loading additional sectors and getting 32-bit protected mode up and running
