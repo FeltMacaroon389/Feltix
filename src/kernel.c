@@ -22,7 +22,6 @@ void kernel_main() {
     print_string("\n    By ", VGA_COLOR_WHITE);
     print_string("FeltMacaroon389", VGA_COLOR_LIGHT_GREY);
 
-
     // Return (this shouldn't really happen)
     return;
 }
