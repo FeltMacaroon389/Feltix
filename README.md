@@ -26,7 +26,7 @@ The output image will be located in the `build` directory.
 
 **Debian/Ubuntu**: 
 - Run: `sudo apt update && sudo apt install git nasm make`
-- You will also require **GNU GCC** for the **i386** CPU architecture. We suggest you follow [this guide](https://wiki.osdev.org/GCC_Cross-Compiler).
+- You will also require **GNU GCC** for the **i386** CPU architecture. I suggest you follow [this guide](https://wiki.osdev.org/GCC_Cross-Compiler)
 
 #### **Optional**:
 
