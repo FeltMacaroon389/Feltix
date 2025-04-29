@@ -30,7 +30,7 @@ void print_banner_rainbow() {
 }
 
 
-/* Please feel free to request other options or color patterns 
+/* Please feel free to request other options or color patterns
  * To do so, open an issue or pull request on the project's GitHub:
  * https://github.com/FeltMacaroon389/Feltix
  */
