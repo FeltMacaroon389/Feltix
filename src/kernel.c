@@ -5,22 +5,24 @@
 // Kernel main function
 void kernel_main() {
 
-    // Clear screen
+    // Clear the screen
     clear_screen();
 
     // Print ASCII art banner
-    print_string("  ___________    .__   __  .__                \n", VGA_COLOR_WHITE);
-    print_string("  \\_   _____/___ |  |_/  |_|__|__  ___       \n", VGA_COLOR_WHITE);
-    print_string("   |    __)/ __ \\|  |\\   __\\  \\  \\/  /   \n", VGA_COLOR_WHITE);
-    print_string("   |     \\  ___/|  |_|  | |  |>    <         \n", VGA_COLOR_WHITE);
-    print_string("   \\____/ \\____>____/__| |__/__/\\___\\     \n", VGA_COLOR_WHITE);
+    // Generated with: https://www.asciiart.eu/text-to-ascii-art
+    print_string("   _____    _ _   _              \n", VGA_COLOR_WHITE);
+    print_string("  |  ___|__| | |_(_)_  __        \n", VGA_COLOR_WHITE);
+    print_string("  | |_ / _ \\ | __| \\ \\/ /     \n", VGA_COLOR_WHITE);
+    print_string("  |  _|  __/ | |_| |>  <         \n", VGA_COLOR_WHITE);
+    print_string("  |_|  \\___|_|\\__|_/_/\\_\\     \n", VGA_COLOR_WHITE);
 
-    // Print welcome message
-    print_string("\n  Welcome to ", VGA_COLOR_WHITE);
-    print_string("Feltix!", VGA_COLOR_LIGHT_GREEN);
-
+    // Print credits
     print_string("\n    By ", VGA_COLOR_WHITE);
     print_string("FeltMacaroon389", VGA_COLOR_LIGHT_GREY);
+
+    // Print welcome message
+    print_string("\n\n Welcome to ", VGA_COLOR_WHITE);
+    print_string("Feltix!", VGA_COLOR_LIGHT_GREEN);
 
     // Return (this shouldn't really happen)
     return;
