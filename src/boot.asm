@@ -63,7 +63,7 @@ start:
 	hlt
 
 ; Boot message
-boot_message db "Booting...", 0x0A, 0x0A, 0
+boot_message db "Booting Feltix...", 0x0A, 0x0A, 0
 
 ; Disk error message
 disk_error_message db "Fatal error: Error Loading From Disk", 0
