@@ -106,7 +106,7 @@ print_string_16:
 	ret
 
 
-; Define the 32-bit GDT structure
+; Define the 32-bit GDT (Global Descriptor Table) structure
 gdt32_start:
 	dq 0x0		; Null descriptor
 
@@ -147,12 +147,8 @@ protected_mode_entry:
 	mov ss, ax	; Set SS (stack segment)
 
 	; Set up the stack (32-bit ESP)
-	mov esp, 0x10000	; Set up the stack pointer 
+	mov esp, 0x10000	; Set up the stack pointer
 	
-	; Variables for keeping track of VGA cursor
-	cursor_row db 0
-	cursor_col db 0
-
 	; Jump to the main userspace function
 	jmp 0x08:main	; Far jump
 
