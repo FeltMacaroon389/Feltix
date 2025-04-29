@@ -1,5 +1,3 @@
-#include <stddef.h>
-#include <stdint.h>
 #include <vga.h>
 #include <banner.h>
 

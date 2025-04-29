@@ -1,6 +1,9 @@
 #ifndef VGA_H
 #define VGA_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 #define VGA_MEMORY (uint16_t*)0xB8000
