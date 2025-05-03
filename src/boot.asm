@@ -13,7 +13,7 @@ global start
 disk db 0
 
 ; Amount of sectors to load
-; If something goes wrong without explanation, try incrementing this value 
+; If something goes wrong without explanation, try incrementing this value
 sectors db 3
 
 ; Program entrypoint
