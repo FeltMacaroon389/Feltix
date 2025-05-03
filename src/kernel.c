@@ -23,6 +23,6 @@ void kernel_main() {
     print_string("Feltix!", VGA_COLOR_LIGHT_GREEN);
 
     // Halt the CPU; we're done here
-    __asm__ __volatile__("hlt");
+    __asm__ __volatile__("cli; hlt");
 }
 

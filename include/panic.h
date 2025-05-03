@@ -16,7 +16,7 @@ void kernel_panic(const char* message) {
     print_string("\n\nPlease reboot your computer", VGA_COLOR_WHITE);
 
     // Halt the CPU
-    __asm__ __volatile__("hlt");
+    __asm__ __volatile__("cli; hlt");
 }
 
 #endif // PANIC_H
