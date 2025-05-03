@@ -26,7 +26,7 @@ The output image will be located in the `build` directory.
     - Finally, `makepkg -si`
     - You may be prompted for your password during this.
 
-  - As for [i386-elf-gcc](https://aur.archlinux.org/packages/i386-elf-gcc):
+  - As for [i386-elf-gcc](https://aur.archlinux.org/packages/i386-elf-gcc)
     - Run: `git clone https://aur.archlinux.org/i386-elf-gcc.git`
     - Next, `cd i386-elf-gcc`
     - Finally, `makepkg -si`
