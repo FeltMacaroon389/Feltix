@@ -1,5 +1,3 @@
-// ASCII art banner handling
-
 #ifndef BANNER_H
 #define BANNER_H
 
