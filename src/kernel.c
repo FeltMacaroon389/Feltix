@@ -22,7 +22,7 @@ void kernel_main() {
     print_string("\n\n Welcome to ", VGA_COLOR_WHITE);
     print_string("Feltix!", VGA_COLOR_LIGHT_GREEN);
 
-    // Return (this shouldn't really happen)
-    return;
+    // Halt the CPU; we're done here
+    __asm__ __volatile__("hlt");
 }
 
