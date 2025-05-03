@@ -13,6 +13,7 @@ global start
 disk db 0
 
 ; Amount of sectors to load
+; If something goes wrong without explanation, try incrementing this value 
 sectors db 3
 
 ; Program entrypoint
@@ -162,8 +163,7 @@ dw 0xAA55			; Boot signature
 BITS 32
 
 
-; Main userspace function
-; Add any I/O functionality here
+; Main function
 main:
 	; Disable hardware interrupts
 	cli
