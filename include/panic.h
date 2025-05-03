@@ -10,10 +10,18 @@ void kernel_panic(const char* message) {
 
     clear_screen();
 
-    print_string("KERNEL PANIC: ", VGA_COLOR_RED);
+    // Default banner obtained from: https://ascii.co.uk/art/skulls
+    print_string("    _____     \n", VGA_COLOR_LIGHT_RED);
+    print_string("   /     \\   \n", VGA_COLOR_LIGHT_RED);
+    print_string("  | () () |   \n", VGA_COLOR_LIGHT_RED);
+    print_string("   \\  ^  /   \n", VGA_COLOR_LIGHT_RED);
+    print_string("    |||||     \n", VGA_COLOR_LIGHT_RED);
+    print_string("    |||||     \n", VGA_COLOR_LIGHT_RED);
+
+    print_string("\n KERNEL PANIC: ", VGA_COLOR_RED);
     print_string(message, VGA_COLOR_LIGHT_BLUE);
 
-    print_string("\n\nPlease reboot your computer", VGA_COLOR_WHITE);
+    print_string("\n\n Please reboot your computer", VGA_COLOR_WHITE);
 
     // Halt the CPU
     __asm__ __volatile__("cli; hlt");
