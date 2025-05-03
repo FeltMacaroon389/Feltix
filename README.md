@@ -1,7 +1,9 @@
 # Feltix
 
-Feltix is an operating system written in C, with the primary focus on simplicity, modularity, and usablility.
-Feltix is not intended for production use.
+## Feltix is an operating system written in C, with the primary focus on simplicity, modularity, and usablility.
+## Feltix is not intended for production use.
+
+---
 
 ### Build instructions
 
