@@ -1,5 +1,8 @@
 # Feltix
 
+Feltix is an operating system written in C, with the primary focus on simplicity, modularity, and usablility.
+Feltix is not intended for production use.
+
 ### Build instructions
 
 - Install [dependencies](https://github.com/FeltMacaroon389/Feltix/tree/master#dependency-installation)
