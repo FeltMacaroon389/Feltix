@@ -5,11 +5,11 @@
 
 // Banner lines definitions
 // Default banner generated with: https://www.asciiart.eu/text-to-ascii-art
-const char banner_line_1[50] = "   _____    _ _   _              \n";
-const char banner_line_2[50] = "  |  ___|__| | |_(_)_  __        \n";
-const char banner_line_3[50] = "  | |_ / _ \\ | __| \\ \\/ /     \n";
-const char banner_line_4[50] = "  |  _|  __/ | |_| |>  <         \n";
-const char banner_line_5[50] = "  |_|  \\___|_|\\__|_/_/\\_\\    \n";
+const char* banner_line_1 = "   _____    _ _   _              \n";
+const char* banner_line_2 = "  |  ___|__| | |_(_)_  __        \n";
+const char* banner_line_3 = "  | |_ / _ \\ | __| \\ \\/ /     \n";
+const char* banner_line_4 = "  |  _|  __/ | |_| |>  <         \n";
+const char* banner_line_5 = "  |_|  \\___|_|\\__|_/_/\\_\\    \n";
 
 // Print all-white banner
 void print_banner_white() {
