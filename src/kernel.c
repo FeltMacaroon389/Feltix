@@ -3,7 +3,6 @@
 #include <vga.h>
 #include <banner.h>
 #include <shell.h>
-#include <panic.h>
 
 // Kernel main function
 void kernel_main() {
