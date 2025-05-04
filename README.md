@@ -6,8 +6,6 @@
 ---
 
 ![Feltix boot screen](screenshots/boot_screen.png)
-![Feltix command showcase](screenshots/command_showcase.png)
-![Feltix kernel panic screen](screenshots/kernel_panic_screen.png)
 
 ### Build instructions
 
