@@ -23,9 +23,9 @@ SECTIONS {
 	} :data
 }
 
-/* Define program headers with correct permissions */
+// Define program headers with permissions
 PHDRS {
-	text PT_LOAD FLAGS(0x5); /* Read + Execute */
-	data PT_LOAD FLAGS(0x6); /* Read + Write */
+	text PT_LOAD FLAGS(0x5); // Read + Execute
+	data PT_LOAD FLAGS(0x6); // Read + Write
 }
 
