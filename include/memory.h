@@ -1,3 +1,5 @@
+// For memory/RAM related information
+
 #ifndef MEMORY_H
 #define MEMORY_H
 

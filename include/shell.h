@@ -1,3 +1,5 @@
+// Basic input handler and command processor
+
 #ifndef SHELL_H
 #define SHELL_H
 

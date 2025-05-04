@@ -1,4 +1,4 @@
-// Keyboard driver
+// Simple keyboard driver
 
 #ifndef KEYBOARD_H
 #define KEYBOARD_H

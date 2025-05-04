@@ -1,3 +1,5 @@
+// Basic ASCII art banner display control
+
 #ifndef BANNER_H
 #define BANNER_H
 
