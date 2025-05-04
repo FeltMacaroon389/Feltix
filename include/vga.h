@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <io.h>
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
@@ -65,6 +66,16 @@ void scroll() {
     }
 }
 
+// Function to update the hardware cursor
+void update_cursor(size_t row, size_t col) {
+    uint16_t pos = row * VGA_WIDTH + col;
+
+    outb(0x3D4, 0x0F); // Low byte of cursor
+    outb(0x3D5, (uint8_t)(pos & 0xFF));
+    outb(0x3D4, 0x0E); // High byte of cursor
+    outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+}
+
 // Print a single character with the specified color
 void print_char(char c, vga_color color) {
     if (c == '\n') {
@@ -84,6 +95,8 @@ void print_char(char c, vga_color color) {
         scroll();
         cursor_row = VGA_HEIGHT - 1;
     }
+
+    update_cursor(cursor_row, cursor_column);
 }
 
 // Print a string with the specified color
@@ -107,6 +120,8 @@ void print_string(const char* str, vga_color color) {
         }
         str++;
     }
+
+    update_cursor(cursor_row, cursor_column);
 }
 
 // Simple helper to handle a backspace in shell
