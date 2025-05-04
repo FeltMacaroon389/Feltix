@@ -5,6 +5,10 @@
 
 ---
 
+![Feltix boot screen](images/boot_screen.png)
+![Feltix command showcase](images/command_showcase.png)
+![Feltix kernel panic screen](images/kernel_panic_screen.png)
+
 ### Build instructions
 
 - Install [dependencies](https://github.com/FeltMacaroon389/Feltix/tree/master#dependency-installation)
