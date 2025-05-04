@@ -12,10 +12,16 @@ void process_command(char* command) {
 
     if (strcmp(command, "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
-        print_string("  help      - Display this help menu\n\n", VGA_COLOR_WHITE);
+        print_string("  help      - Display this help menu\n", VGA_COLOR_WHITE);
+        print_string("  clear     - Clear the screen\n\n", VGA_COLOR_WHITE);
+
+    } else if (strcmp(command, "clear") == 0) {
+        clear_screen();
 
     } else {
-        print_string("Unknown command. Type 'help' for a list of commands.\n\n", VGA_COLOR_WHITE);
+        print_string("Unknown command. Type ", VGA_COLOR_WHITE);
+        print_string("help", VGA_COLOR_CYAN);
+        print_string(" for a list of commands.\n\n", VGA_COLOR_WHITE);
     }
 }
 
