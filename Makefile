@@ -20,7 +20,7 @@ OUT_IMG = feltix.img
 
 # Emulator and flags
 EMU = qemu-system-i386
-EMUFLAGS = -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG)
+EMUFLAGS = -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG) -smp 2 -m 64M
 
 # Phony targets
 .PHONY: all help run clean
