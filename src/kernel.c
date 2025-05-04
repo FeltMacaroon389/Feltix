@@ -2,6 +2,7 @@
 
 #include <vga.h>
 #include <banner.h>
+#include <shell.h>
 #include <panic.h>
 
 // Kernel main function
@@ -11,7 +12,6 @@ void kernel_main() {
     clear_screen();
 
     // Print white ASCII art banner
-    // See <include/banner.h>
     print_banner_white();
 
     // Print credits
@@ -20,7 +20,14 @@ void kernel_main() {
 
     // Print welcome message
     print_string("\n\n Welcome to ", VGA_COLOR_WHITE);
-    print_string("Feltix!", VGA_COLOR_LIGHT_GREEN);
+    print_string("Feltix!\n", VGA_COLOR_LIGHT_GREEN);
+
+    print_string(" Type ", VGA_COLOR_WHITE);
+    print_string("help", VGA_COLOR_CYAN);
+    print_string(" for a list of commands!\n\n", VGA_COLOR_WHITE);
+
+    // Hand off control to the shell
+    shell_start("Feltix> ", VGA_COLOR_LIGHT_GREEN);
 
     // Halt the CPU; we're done here
     __asm__ __volatile__("cli; hlt");

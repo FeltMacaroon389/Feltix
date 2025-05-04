@@ -6,7 +6,7 @@
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
-#define VGA_MEMORY (uint16_t*)0xB8000
+#define VGA_MEMORY ((uint16_t*)0xB8000)
 
 static uint16_t* const vga_buffer = VGA_MEMORY;
 static size_t cursor_row = 0;
@@ -51,6 +51,41 @@ void clear_screen(void) {
     cursor_column = 0;
 }
 
+// Function to scroll the VGA screen by one line
+void scroll() {
+    // Move each row up one row
+    for (size_t row = 1; row < VGA_HEIGHT; row++) {
+        for (size_t col = 0; col < VGA_WIDTH; col++) {
+            VGA_MEMORY[(row - 1) * VGA_WIDTH + col] = VGA_MEMORY[row * VGA_WIDTH + col];
+        }
+    }
+    // Clear the last row
+    for (size_t col = 0; col < VGA_WIDTH; col++) {
+        VGA_MEMORY[(VGA_HEIGHT - 1) * VGA_WIDTH + col] = vga_entry(' ', VGA_COLOR_BLACK);
+    }
+}
+
+// Print a single character with the specified color
+void print_char(char c, vga_color color) {
+    if (c == '\n') {
+        cursor_column = 0;
+        cursor_row++;
+    } else {
+        const size_t index = cursor_row * VGA_WIDTH + cursor_column;
+        vga_buffer[index] = vga_entry((unsigned char)c, color);
+        cursor_column++;
+        if (cursor_column >= VGA_WIDTH) {
+            cursor_column = 0;
+            cursor_row++;
+        }
+    }
+
+    if (cursor_row >= VGA_HEIGHT) {
+        scroll();
+        cursor_row = VGA_HEIGHT - 1;
+    }
+}
+
 // Print a string with the specified color
 void print_string(const char* str, vga_color color) {
     while (*str) {
@@ -67,12 +102,25 @@ void print_string(const char* str, vga_color color) {
             }
         }
         if (cursor_row >= VGA_HEIGHT) {
-            cursor_row = 0; // Wrap back to top (simple wrap behavior)
+            scroll();
+            cursor_row = VGA_HEIGHT - 1;
         }
         str++;
     }
 }
 
+// Simple helper to handle a backspace in shell
+void shell_backspace() {
+    if (cursor_column > 0) {
+        cursor_column--;
+
+    } else if (cursor_row > 0) {
+        cursor_row--;
+        cursor_column = VGA_WIDTH - 1;
+    }
+
+    VGA_MEMORY[cursor_row * VGA_WIDTH + cursor_column] = vga_entry(' ', VGA_COLOR_BLACK);
+}
 
 #endif // VGA_H
 
