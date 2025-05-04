@@ -1,4 +1,4 @@
-// For memory/RAM related information
+// For memory/RAM related information and functionality
 
 #ifndef MEMORY_H
 #define MEMORY_H
@@ -49,4 +49,4 @@ void print_accessible_memory() {
 }
 
 #endif // MEMORY_H
-//
+

@@ -1,4 +1,4 @@
-// For CPU-related information
+// For CPU-related information and functionality
 
 #ifndef CPU_H
 #define CPU_H
@@ -53,4 +53,5 @@ void print_cpu_mode() {
     }
 }
 
-#endif
+#endif // CPU_H
+
