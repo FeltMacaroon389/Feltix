@@ -3,6 +3,7 @@
 #include <vga.h>
 #include <banner.h>
 #include <shell.h>
+#include <panic.h>
 
 // Kernel main function
 void kernel_main() {
@@ -28,7 +29,7 @@ void kernel_main() {
     // Hand off control to the shell
     shell_start("Feltix> ", VGA_COLOR_LIGHT_GREEN);
 
-    // Halt the CPU; we're done here
-    __asm__ __volatile__("cli; hlt");
+    // Trigger a kernel panic when there's nothing to do
+    kernel_panic("KernelHasReturned");
 }
 
