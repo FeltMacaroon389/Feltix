@@ -82,7 +82,11 @@ void process_command(char* command) {
 
 
     } else if (strcmp(command, "raminfo") == 0) {
-        print_accessible_memory();
+        char* memory_mb = get_accessible_memory();
+
+        print_string("Accessible memory: ", VGA_COLOR_WHITE);
+        print_string(memory_mb, VGA_COLOR_LIGHT_GREY);
+        print_string("MB\n\n", VGA_COLOR_LIGHT_GREY);
 
 
     } else {
