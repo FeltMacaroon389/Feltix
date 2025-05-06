@@ -14,8 +14,9 @@ static inline void cpuid(int code, uint32_t *a, uint32_t *b, uint32_t *c, uint32
                      : "a"(code), "c"(0));
 }
 
-// Function to print all accessible CPU threads
-void print_cpu_threads() {
+// Function that returns the number of accessible CPU threads
+char* get_cpu_threads() {
+    static char threads_str[16];
     uint32_t eax, ebx, ecx, edx;
 
     // Call CPUID to get the number of threads
@@ -24,17 +25,19 @@ void print_cpu_threads() {
     // Extract number of logical processors (threads) from bits 23:16 in EBX register
     uint32_t cpu_threads = (ebx >> 16) & 0xFF;
 
-    // Convert the number of threads to a string and print it
-    char thread_str[16];
-    int_to_str(cpu_threads, thread_str, 0);
+    // If 0, set to 1
+    if (cpu_threads == 0) {
+        cpu_threads = 1;
+    }
 
-    print_string("CPU threads: ", VGA_COLOR_WHITE);
-    print_string(thread_str, VGA_COLOR_LIGHT_GREY);
-    print_string("\n", VGA_COLOR_WHITE);
+    // Convert the number of threads to a string and return it
+    int_to_str(cpu_threads, threads_str, 0);
+
+    return threads_str;
 }
 
-// Function to print the CPU mode (architecture)
-void print_cpu_mode() {
+// Function to check if the CPU supports 64-bit
+uint32_t cpu_supports_64bit() {
     uint32_t eax, ebx, ecx, edx;
 
     // Check CPUID for 64-bit mode support
@@ -43,14 +46,7 @@ void print_cpu_mode() {
     // Check bit 29 of EDX for 64-bit support
     uint32_t is_64bit_supported = (edx >> 29) & 1;
 
-    // Print result
-    print_string("CPU architecture: ", VGA_COLOR_WHITE);
-
-    if (is_64bit_supported) {
-        print_string("x86_64\n\n", VGA_COLOR_LIGHT_GREY);
-    } else {
-        print_string("x86\n\n", VGA_COLOR_LIGHT_GREY);
-    }
+    return is_64bit_supported;
 }
 
 #endif // CPU_H
