@@ -14,8 +14,6 @@
 
 // Function to process shell commands
 void process_command(char* command) {
-    char *args;
-
 
     if (strcmp(command, "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
@@ -105,7 +103,7 @@ void shell_start(const char* prompt, uint8_t color) {
         // Print prompt
         print_string(prompt, color);
 
-        char input_buffer[256];
+        char input_buffer[2048];
         size_t input_index = 0;
 
         // Read characters until ENTER is pressed
