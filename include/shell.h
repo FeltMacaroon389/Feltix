@@ -87,12 +87,10 @@ void process_command(char* command) {
 
     } else {
         print_string("Unknown command: ", VGA_COLOR_LIGHT_RED);
-        print_string("\"", VGA_COLOR_WHITE);
         print_string(command, VGA_COLOR_LIGHT_GREY);
-        print_string("\"", VGA_COLOR_WHITE);
         print_string("\nType ", VGA_COLOR_WHITE);
         print_string("help", VGA_COLOR_CYAN);
-        print_string(" for a list of commands.\n\n", VGA_COLOR_WHITE);
+        print_string(" for a list of commands\n\n", VGA_COLOR_WHITE);
     }
 }
 
