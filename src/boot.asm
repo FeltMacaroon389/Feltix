@@ -15,7 +15,7 @@ disk db 0
 ; Amount of sectors to load
 ; If something goes wrong without explanation, try incrementing this value
 ; If you get a disk error, lower it again
-sectors db 14
+sectors db 15
 
 ; Program entrypoint
 ; Here we generally just focus on loading additional sectors and getting 32-bit protected mode up and running
