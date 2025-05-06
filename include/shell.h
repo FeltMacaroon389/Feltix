@@ -16,6 +16,7 @@
 void process_command(char* command) {
     char *args;
 
+
     if (strcmp(command, "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
 
@@ -37,6 +38,7 @@ void process_command(char* command) {
         print_string("  raminfo   ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display accessible memory (RAM) in megabytes (MB)\n\n", VGA_COLOR_WHITE);
 
+
     } else if (strcmp(command, "license") == 0) {
         print_string("Feltix", VGA_COLOR_LIGHT_GREY);
         print_string(" is licensed under the ", VGA_COLOR_WHITE);
@@ -49,21 +51,43 @@ void process_command(char* command) {
 
         print_string("https://github.com/FeltMacaroon389/Feltix\n\n", VGA_COLOR_LIGHT_BLUE);
 
+
     } else if (strcmp(command, "clear") == 0) {
         clear_screen();
+
 
     } else if (strcmp(command, "panic") == 0) {
         kernel_panic("ManuallyTriggeredByUser");
 
+
     } else if (strcmp(command, "cpuinfo") == 0) {
-        print_cpu_threads();
-        print_cpu_mode();
+
+        // Print CPU threads
+        char* cpu_threads = get_cpu_threads();
+
+        print_string("CPU threads: ", VGA_COLOR_WHITE);
+        print_string(cpu_threads, VGA_COLOR_LIGHT_GREY);
+
+        // Print CPU architecture
+        print_string("\nCPU architecture: ", VGA_COLOR_WHITE);
+
+        uint32_t is_64bit_supported = cpu_supports_64bit();
+
+        if (is_64bit_supported == 0) {
+            print_string("x86\n\n", VGA_COLOR_LIGHT_GREY);
+
+        } else if (is_64bit_supported == 1) {
+            print_string("x86_64\n\n", VGA_COLOR_LIGHT_GREY);
+        }
+
 
     } else if (strcmp(command, "raminfo") == 0) {
         print_accessible_memory();
 
+
     } else {
-        print_string("Unknown command. Type ", VGA_COLOR_WHITE);
+        print_string("Unknown command. ", VGA_COLOR_LIGHT_RED);
+        print_string("Type ", VGA_COLOR_WHITE);
         print_string("help", VGA_COLOR_CYAN);
         print_string(" for a list of commands.\n\n", VGA_COLOR_WHITE);
     }
