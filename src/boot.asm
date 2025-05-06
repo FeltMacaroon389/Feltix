@@ -187,6 +187,9 @@ main:
 	; Any following code in this function will only execute if the kernel ever returns
 	; (which it probably shouldn't if you've set it up correctly)
 
+	; Just in case, halt the CPU
+	hlt
+
 
 ; Pad to 1024 bytes
 times 1024 - ($ - $$) db 0
