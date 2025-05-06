@@ -60,15 +60,19 @@ start:
 	; Print error message
 	mov si, disk_error_message
 	call print_string_16
-	
-	; Halt the CPU
-	hlt
+
+	; Wait for keypress
+	call wait_for_keypress
+
+	; Reboot the system
+	mov al, 0FEh		; Reset command for 8042
+	out 64h, al		; Send to keyboard controller
 
 ; Boot message
 boot_message db "Booting Feltix...", 0x0A, 0x0A, 0
 
 ; Disk error message
-disk_error_message db "Fatal error: Error Loading From Disk", 0
+disk_error_message db "Fatal error: Error Loading From Disk", 0x0A, "Press any key to reboot...", 0
 
 
 ; Function for printing strings in 16-bit real mode
@@ -106,6 +110,13 @@ print_string_16:
 .done:
 	; Return from the function
 	ret
+
+
+; Function to wait for a keypress to continue
+wait_for_keypress:
+    xor ah, ah
+    int 16h
+    ret
 
 
 ; Define the 32-bit GDT (Global Descriptor Table) structure
