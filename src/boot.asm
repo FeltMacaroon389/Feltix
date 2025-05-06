@@ -141,13 +141,13 @@ gdt32_data:
 	db 11001111b
 	db 0x0
 
+; End of 32-bit GDT
+gdt32_end:
+
 ; GDT descriptor containing necessary information for LGDT
 gdt32_definition:
 	dw gdt32_end - gdt32_start
 	dd gdt32_start
-
-; End of 32-bit GDT
-gdt32_end:
 
 
 ; 32-bit protected mode entry
