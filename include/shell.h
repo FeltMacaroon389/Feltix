@@ -12,10 +12,10 @@
 #include <cpu.h>
 #include <memory.h>
 
-// Function to process shell commands
-void process_command(char* command) {
+// Function to process parsed shell commands
+void process_command(int argc, char** argv) {
 
-    if (strcmp(command, "help") == 0) {
+    if (strcmp(argv[0], "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
 
         print_string("  help      ", VGA_COLOR_LIGHT_GREY);
@@ -37,7 +37,7 @@ void process_command(char* command) {
         print_string("- Display accessible memory (RAM) in megabytes (MB)\n\n", VGA_COLOR_WHITE);
 
 
-    } else if (strcmp(command, "license") == 0) {
+    } else if (strcmp(argv[0], "license") == 0) {
         print_string("Feltix", VGA_COLOR_LIGHT_GREY);
         print_string(" is licensed under the ", VGA_COLOR_WHITE);
         print_string("GNU GPLv3", VGA_COLOR_LIGHT_GREY);
@@ -50,15 +50,15 @@ void process_command(char* command) {
         print_string("https://github.com/FeltMacaroon389/Feltix\n\n", VGA_COLOR_LIGHT_BLUE);
 
 
-    } else if (strcmp(command, "clear") == 0) {
+    } else if (strcmp(argv[0], "clear") == 0) {
         clear_screen();
 
 
-    } else if (strcmp(command, "panic") == 0) {
+    } else if (strcmp(argv[0], "panic") == 0) {
         kernel_panic("ManuallyTriggeredByUser");
 
 
-    } else if (strcmp(command, "cpuinfo") == 0) {
+    } else if (strcmp(argv[0], "cpuinfo") == 0) {
 
         // Print CPU threads
         char* cpu_threads = get_cpu_threads();
@@ -79,7 +79,7 @@ void process_command(char* command) {
         }
 
 
-    } else if (strcmp(command, "raminfo") == 0) {
+    } else if (strcmp(argv[0], "raminfo") == 0) {
         char* memory_mb = get_accessible_memory();
 
         print_string("Accessible memory: ", VGA_COLOR_WHITE);
@@ -89,10 +89,26 @@ void process_command(char* command) {
 
     } else {
         print_string("Unknown command: ", VGA_COLOR_LIGHT_RED);
-        print_string(command, VGA_COLOR_LIGHT_GREY);
+        print_string(argv[0], VGA_COLOR_LIGHT_GREY);
         print_string("\nType ", VGA_COLOR_WHITE);
         print_string("help", VGA_COLOR_CYAN);
         print_string(" for a list of commands\n\n", VGA_COLOR_WHITE);
+    }
+}
+
+// Function to parse user input
+void parse_user_input(char* input) {
+    char* argv[64];
+    int argc = 0;
+
+    char* token = strtok(input, " ");
+    while (token != NULL && argc < 64) {
+        argv[argc++] = token;
+        token = strtok(NULL, " ");
+    }
+
+    if (argc > 0) {
+        process_command(argc, argv);
     }
 }
 
@@ -139,7 +155,7 @@ void shell_start(const char* prompt, uint8_t color) {
         input_buffer[input_index] = '\0';
 
         if (strcmp(input_buffer, "") != 0) {
-            process_command(input_buffer);
+            parse_user_input(input_buffer);
         }
     }
 }
