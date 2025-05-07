@@ -11,6 +11,7 @@
 #include <panic.h>
 #include <cpu.h>
 #include <memory.h>
+#include <ffs.h>
 
 // Function to process parsed shell commands
 void process_command(int argc, char** argv) {
@@ -18,22 +19,41 @@ void process_command(int argc, char** argv) {
     if (strcmp(argv[0], "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
 
-        print_string("  help      ", VGA_COLOR_LIGHT_GREY);
+        print_string("  help                    ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display this help menu\n", VGA_COLOR_WHITE);
 
-        print_string("  license   ", VGA_COLOR_LIGHT_GREY);
+        print_string("  license                 ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display licensing information\n", VGA_COLOR_WHITE);
 
-        print_string("  clear     ", VGA_COLOR_LIGHT_GREY);
+        print_string("  clear                   ", VGA_COLOR_LIGHT_GREY);
         print_string("- Clear the screen\n", VGA_COLOR_WHITE);
 
-        print_string("  panic     ", VGA_COLOR_LIGHT_GREY);
+        print_string("  ls                      ", VGA_COLOR_LIGHT_GREY);
+        print_string("- List all files in filesystem\n", VGA_COLOR_WHITE);
+
+        print_string("  touch ", VGA_COLOR_LIGHT_GREY);
+        print_string("<filename>        ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Create an empty file\n", VGA_COLOR_WHITE);
+
+        print_string("  rm ", VGA_COLOR_LIGHT_GREY);
+        print_string("<filename>           ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Delete a file\n", VGA_COLOR_WHITE);
+
+        print_string("  write ", VGA_COLOR_LIGHT_GREY);
+        print_string("<filename> <data> ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Write data to a file\n", VGA_COLOR_WHITE);
+
+        print_string("  cat ", VGA_COLOR_LIGHT_GREY);
+        print_string("<filename>          ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Display the contents of a file\n", VGA_COLOR_WHITE);
+
+        print_string("  panic                   ", VGA_COLOR_LIGHT_GREY);
         print_string("- Force a kernel panic\n", VGA_COLOR_WHITE);
 
-        print_string("  cpuinfo   ", VGA_COLOR_LIGHT_GREY);
+        print_string("  cpuinfo                 ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display some information about the CPU\n", VGA_COLOR_WHITE);
 
-        print_string("  raminfo   ", VGA_COLOR_LIGHT_GREY);
+        print_string("  raminfo                 ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display accessible memory (RAM) in megabytes (MB)\n\n", VGA_COLOR_WHITE);
 
 
@@ -52,6 +72,113 @@ void process_command(int argc, char** argv) {
 
     } else if (strcmp(argv[0], "clear") == 0) {
         clear_screen();
+
+
+    // Filesystem operations
+    } else if (strcmp(argv[0], "ls") == 0) {
+        ffs_list_files();
+
+
+    } else if (strcmp(argv[0], "touch") == 0) {
+        if (!argv[1]) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("touch ", VGA_COLOR_LIGHT_GREY);
+            print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+
+        } else {
+            int ffs_return_code = ffs_create_file(argv[1]);
+
+            if (ffs_return_code == FFS_INVALID_NAME) {
+                print_string("Filename too long: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+
+            } else if (ffs_return_code == FFS_FILE_EXISTS) {
+                print_string("File exists: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+
+            } else if (ffs_return_code == FFS_NO_SPACE) {
+                print_string("No space left. ", VGA_COLOR_LIGHT_RED);
+                print_string("Please delete a file to make space", VGA_COLOR_WHITE);
+                print_string("\n\n", VGA_COLOR_BLACK);
+            }
+        }
+
+
+    } else if (strcmp(argv[0], "rm") == 0) {
+        if (!argv[1]) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("rm ", VGA_COLOR_LIGHT_GREY);
+            print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+
+        } else {
+            int ffs_return_code = ffs_delete_file(argv[1]);
+
+           if (ffs_return_code == FFS_FILE_NOT_FOUND) {
+                print_string("File not found: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+            }
+        }
+
+
+    } else if (strcmp(argv[0], "write") == 0) {
+        if (argc < 3) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("write ", VGA_COLOR_LIGHT_GREY);
+            print_string("<filename> <data>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+
+        } else {
+            // Combine all arguments after argv[1] into a single data string
+            char data[4096] = {0};  // Max combined size (4KB)
+            for (int i = 2; i < argc; ++i) {
+                strcat(data, argv[i]);
+                if (i < argc - 1) strcat(data, " ");
+            }
+
+            int ffs_return_code = ffs_write_file(argv[1], data);
+
+            if (ffs_return_code == FFS_FILE_NOT_FOUND) {
+                print_string("File not found: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+
+            } else if (ffs_return_code == FFS_SIZE_EXCEEDS_LIMIT) {
+                print_string("File exceeds limit: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+            }
+        }
+
+
+    } else if (strcmp(argv[0], "cat") == 0) {
+        if (!argv[1]) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("cat ", VGA_COLOR_LIGHT_GREY);
+            print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+
+        } else {
+            char cat_buffer[4096];  // 4KB
+            size_t cat_buffer_size = sizeof(cat_buffer);
+
+            int ffs_return_code = ffs_read_file(argv[1], cat_buffer, cat_buffer_size);
+
+            if (ffs_return_code == FFS_FILE_NOT_FOUND) {
+                print_string("File not found: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+
+            } else if (ffs_return_code == FFS_BUFFER_TOO_SMALL) {
+                print_string("File too large: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+
+            } else {
+                print_string(cat_buffer, VGA_COLOR_LIGHT_GREY);
+                print_string("\n\n", VGA_COLOR_BLACK);
+            }
+        }
 
 
     } else if (strcmp(argv[0], "panic") == 0) {
@@ -98,19 +225,24 @@ void process_command(int argc, char** argv) {
 
 // Function to parse user input
 void parse_user_input(char* input) {
-    char* argv[64];
+    char* argv[64] = { 0 };
     int argc = 0;
 
+    // Split on spaces
     char* token = strtok(input, " ");
-    while (token != NULL && argc < 64) {
+    while (token != NULL && argc < 63) {
         argv[argc++] = token;
         token = strtok(NULL, " ");
     }
+
+    // Make sure the list is NULL-terminated
+    argv[argc] = NULL;
 
     if (argc > 0) {
         process_command(argc, argv);
     }
 }
+
 
 // Start of shell loop
 void shell_start(const char* prompt, uint8_t color) {
