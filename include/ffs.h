@@ -37,20 +37,6 @@ typedef struct {
 
 FeltFileSystem fs;
 
-// Initialize the filesystem
-void initialize_ffs() {
-    for (int i = 0; i < FFS_MAX_FILES; i++) {
-        fs.files[i].is_used = 0;
-        for (size_t j = 0; j < FFS_MAX_FILENAME_LENGTH; j++) {
-            fs.files[i].name[j] = '\0';
-        }
-        for (size_t j = 0; j < FFS_MAX_FILE_SIZE; j++) {
-            fs.files[i].data[j] = '\0';
-        }
-        fs.files[i].size = 0;
-    }
-}
-
 // Create a file
 int ffs_create_file(const char *name) {
     if (strlen(name) >= FFS_MAX_FILENAME_LENGTH) {
