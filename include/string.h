@@ -32,6 +32,15 @@ void memcpy(char* dest, const char* src, size_t n) {
     }
 }
 
+// Minimal implementation of memset
+void* memset(void* ptr, int value, size_t num) {
+    unsigned char* p = (unsigned char*)ptr;
+    for (size_t i = 0; i < num; i++) {
+        p[i] = (unsigned char)value;
+    }
+    return ptr;
+}
+
 // Minimal implementation of strcmp
 int strcmp(const char* str1, const char* str2) {
     while (*str1 && (*str1 == *str2)) {
@@ -88,6 +97,24 @@ char* strtok(char* str, const char* delim) {
     }
 
     return token;
+}
+
+// Minimal implementation of strcat
+char* strcat(char* dest, const char* src) {
+    char* original = dest;
+
+    // Move to the end of dest string
+    while (*dest) {
+        dest++;
+    }
+
+    // Copy src to the end of dest
+    while (*src) {
+        *dest++ = *src++;
+    }
+
+    *dest = '\0'; // Null-terminate the result
+    return original;
 }
 
 #endif // STRING_H
