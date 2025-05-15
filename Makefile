@@ -22,8 +22,13 @@ OUT_IMG = feltix.img
 EMU = qemu-system-i386
 EMUFLAGS = -drive format=raw,file=$(BUILD_DIR)/$(OUT_IMG) -smp 2 -m 64M
 
+# Device to flash image to with "flash" target
+# IMPORTANT: All data on this device will be LOST!
+# Make sure this is fine before proceeding
+FLASH_DEV = /dev/sda
+
 # Phony targets
-.PHONY: all help run clean
+.PHONY: all help run flash clean
 
 # By default, build the image
 all: $(OUT_IMG)
@@ -37,6 +42,7 @@ help:
 	@echo "    help - Display this help menu"
 	@echo "    $(OUT_IMG) - Compile the final output image"
 	@echo "    run - Compile the image and run it in an emulator (QEMU by default)"
+	@echo "    flash - flash the image to a storage medium (currently $(FLASH_DEV))"
 	@echo "    clean - Remove build files"
 	@echo " "
 
@@ -52,6 +58,12 @@ $(OUT_IMG):
 # Run the image in an emulator
 run: $(OUT_IMG)
 	$(EMU) $(EMUFLAGS)
+
+flash: $(OUT_IMG)
+	dd if=$(BUILD_DIR)/$(OUT_IMG) of=$(FLASH_DEV) status=progress oflag=sync
+	sync
+
+	@echo -e "\n$(OUT_IMG) successfully flashed to $(FLASH_DEV)!"
 
 # Clean build files
 clean:
