@@ -47,6 +47,11 @@ start:
 	; Set up the 32-bit GDT
 	lgdt [gdt32_definition]
 	
+	; Enable A20 line
+	in al, 0x92
+	or al, 00000010b    ; Set bit 1 to enable A20
+	out 0x92, al
+
 	; Set PE bit in EFLAGS to enable protected mode (32-bit)
 	mov eax, cr0	; Get the value of CR0
 	or eax, 0x1	; Set the PE (protected mode enable) bit
