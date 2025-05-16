@@ -7,7 +7,7 @@ OBJCOPY = i386-elf-objcopy
 
 # Parameters
 ASFLAGS = -f elf32
-CCFLAGS = -nostdlib -ffreestanding -std=gnu99 -T linker.ld -I./include
+CCFLAGS = -nostdlib -ffreestanding -std=gnu99 -O2 -T linker.ld -I./include
 OBJCOPYFLAGS = -O binary
 
 # Directories
