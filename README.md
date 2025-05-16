@@ -7,6 +7,17 @@
 
 ![Feltix boot screen](screenshots/boot_screen.png)
 
+### Feltix currently supports the following hardware:
+- i386 (x86) or AMD64 (x86_64) CPU,
+- Depending on the firmware, around 3 gigabytes (GB) of RAM,
+- BIOS firmware (not EFI/UEFI),
+- Standard PS/2 and USB keyboards,
+- VGA-text mode display,
+
+**MORE TO COME**
+
+---
+
 ### Build instructions
 
 - Install [dependencies](https://github.com/FeltMacaroon389/Feltix/tree/master#dependency-installation)
