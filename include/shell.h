@@ -28,6 +28,9 @@ void process_command(int argc, char** argv) {
         print_string("  clear                           ", VGA_COLOR_LIGHT_GREY);
         print_string("- Clear the screen\n", VGA_COLOR_WHITE);
 
+        print_string("  reboot                          ", VGA_COLOR_LIGHT_GREY);
+        print_string("- Reboot the system\n", VGA_COLOR_WHITE);
+
         print_string("  math ", VGA_COLOR_LIGHT_GREY);
         print_string("<num1> <operation> <num2>  ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Perform a math operation\n", VGA_COLOR_WHITE);
@@ -76,6 +79,10 @@ void process_command(int argc, char** argv) {
 
     } else if (strcmp(argv[0], "clear") == 0) {
         clear_screen();
+
+
+    } else if (strcmp(argv[0], "reboot") == 0) {
+        reboot_system();
 
 
     } else if (strcmp(argv[0], "math") == 0) {
