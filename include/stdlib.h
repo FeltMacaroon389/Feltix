@@ -41,6 +41,65 @@ static inline float atof(const char *str) {
     return sign * result / divisor;
 }
 
+// Function to check if a string can be can be converted to a float
+int is_valid_float(const char *str) {
+    const char *p = str;
+    if (p == 0) {
+        return 1;
+    }
+
+    while (*p == ' ' || *p == '\t' || *p == '\n' ||
+           *p == '\r' || *p == '\f' || *p == '\v') {
+        p++;
+    }
+
+    if (*p == '+' || *p == '-') {
+        p++;
+    }
+
+    int has_digits = 0;
+    while (*p >= '0' && *p <= '9') {
+        has_digits = 1;
+        p++;
+    }
+
+    if (*p == '.') {
+        p++;
+        while (*p >= '0' && *p <= '9') {
+            has_digits = 1;
+            p++;
+        }
+    }
+
+    if (!has_digits) {
+        return 1;
+    }
+
+    if (*p == 'e' || *p == 'E') {
+        p++;
+        if (*p == '+' || *p == '-') {
+            p++;
+        }
+
+        int exp_digits = 0;
+        while (*p >= '0' && *p <= '9') {
+            exp_digits = 1;
+            p++;
+        }
+
+        if (!exp_digits) {
+            return 1;
+        }
+    }
+
+    while (*p == ' ' || *p == '\t' || *p == '\n' ||
+           *p == '\r' || *p == '\f' || *p == '\v') {
+        p++;
+    }
+
+    return *p != '\0';
+}
+
 // Function to reverse a string
 void reverse_string(char* str, int len) {
     int i = 0, j = len - 1;
