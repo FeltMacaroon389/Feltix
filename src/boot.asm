@@ -73,6 +73,9 @@ start:
 	mov al, 0FEh		; Reset command for 8042
 	out 64h, al		; Send to keyboard controller
 
+	; If that fails, try unknown
+	ud2
+
 ; Boot message
 boot_message db "Booting Feltix...", 0x0A, 0x0A, 0
 
