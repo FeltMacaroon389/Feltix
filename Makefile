@@ -7,7 +7,7 @@ OBJCOPY = i386-elf-objcopy
 
 # Parameters
 ASFLAGS = -f elf32
-CCFLAGS = -nostdlib -ffreestanding -std=gnu99 -O2 -T linker.ld -I./include
+CCFLAGS = -nostdlib -ffreestanding -std=gnu99 -T linker.ld -I./include
 OBJCOPYFLAGS = -O binary
 
 # Directories
@@ -62,8 +62,10 @@ run: $(OUT_IMG)
 flash: $(OUT_IMG)
 	dd if=$(BUILD_DIR)/$(OUT_IMG) of=$(FLASH_DEV) status=progress oflag=sync
 	sync
+	eject $(FLASH_DEV)
 
 	@echo -e "\n$(OUT_IMG) successfully flashed to $(FLASH_DEV)!"
+	@echo "You may now safely remove your device"
 
 # Clean build files
 clean:
