@@ -4,6 +4,8 @@
 #define PANIC_H
 
 #include <vga.h>
+#include <keyboard.h>
+#include <power.h>
 
 // Function to trigger a kernel panic with a custom message
 void kernel_panic(const char* message) {
@@ -21,10 +23,13 @@ void kernel_panic(const char* message) {
     print_string("\n KERNEL PANIC: ", VGA_COLOR_RED);
     print_string(message, VGA_COLOR_LIGHT_BLUE);
 
-    print_string("\n\n Please reboot your computer", VGA_COLOR_WHITE);
+    print_string("\n\n Press any key to reboot...", VGA_COLOR_WHITE);
 
-    // Halt the CPU
-    __asm__ __volatile__("cli; hlt");
+    // Wait for keypress
+    keyboard_getchar();
+
+    // Reboot
+    reboot_system();
 }
 
 #endif // PANIC_H
