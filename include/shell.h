@@ -19,42 +19,46 @@ void process_command(int argc, char** argv) {
     if (strcmp(argv[0], "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
 
-        print_string("  help                    ", VGA_COLOR_LIGHT_GREY);
+        print_string("  help                            ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display this help menu\n", VGA_COLOR_WHITE);
 
-        print_string("  license                 ", VGA_COLOR_LIGHT_GREY);
+        print_string("  license                         ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display licensing information\n", VGA_COLOR_WHITE);
 
-        print_string("  clear                   ", VGA_COLOR_LIGHT_GREY);
+        print_string("  clear                           ", VGA_COLOR_LIGHT_GREY);
         print_string("- Clear the screen\n", VGA_COLOR_WHITE);
 
-        print_string("  ls                      ", VGA_COLOR_LIGHT_GREY);
+        print_string("  math ", VGA_COLOR_LIGHT_GREY);
+        print_string("<num1> <operation> <num2>  ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Perform a math operation\n", VGA_COLOR_WHITE);
+
+        print_string("  ls                              ", VGA_COLOR_LIGHT_GREY);
         print_string("- List all files in filesystem\n", VGA_COLOR_WHITE);
 
         print_string("  touch ", VGA_COLOR_LIGHT_GREY);
-        print_string("<filename>        ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("<filename>                ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Create an empty file\n", VGA_COLOR_WHITE);
 
         print_string("  rm ", VGA_COLOR_LIGHT_GREY);
-        print_string("<filename>           ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("<filename>                   ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Delete a file\n", VGA_COLOR_WHITE);
 
         print_string("  write ", VGA_COLOR_LIGHT_GREY);
-        print_string("<filename> <data> ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("<filename> <data>         ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Write data to a file\n", VGA_COLOR_WHITE);
 
         print_string("  cat ", VGA_COLOR_LIGHT_GREY);
-        print_string("<filename>          ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("<filename>                  ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Display the contents of a file\n", VGA_COLOR_WHITE);
 
-        print_string("  panic                   ", VGA_COLOR_LIGHT_GREY);
+        print_string("  panic                           ", VGA_COLOR_LIGHT_GREY);
         print_string("- Force a kernel panic\n", VGA_COLOR_WHITE);
 
-        print_string("  cpuinfo                 ", VGA_COLOR_LIGHT_GREY);
+        print_string("  cpuinfo                         ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display some information about the CPU\n", VGA_COLOR_WHITE);
 
-        print_string("  raminfo                 ", VGA_COLOR_LIGHT_GREY);
-        print_string("- Display accessible memory (RAM) in megabytes (MB)\n\n", VGA_COLOR_WHITE);
+        print_string("  raminfo                         ", VGA_COLOR_LIGHT_GREY);
+        print_string("- Display accessible memory in megabytes\n\n", VGA_COLOR_WHITE);
 
 
     } else if (strcmp(argv[0], "license") == 0) {
@@ -72,6 +76,57 @@ void process_command(int argc, char** argv) {
 
     } else if (strcmp(argv[0], "clear") == 0) {
         clear_screen();
+
+
+    } else if (strcmp(argv[0], "math") == 0) {
+        if (argc < 4) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("math ", VGA_COLOR_LIGHT_GREY);
+            print_string("<num1> <operation> <num2>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+
+        } else {
+            if (is_valid_float(argv[1]) || is_valid_float(argv[3]) == 1) {
+                print_string("Math cannot be performed on non-numbers!\n\n", VGA_COLOR_LIGHT_RED);
+                return;
+            }
+
+            double num1 = atof(argv[1]);
+            double num2 = atof(argv[2]);
+            double result;
+            char result_buffer[512];
+
+            if (strcmp(argv[2], "+") == 0) {
+                result = num1 + num2;
+
+            } else if (strcmp(argv[2], "-") == 0) {
+                result = num1 - num2;
+
+            } else if (strcmp(argv[2], "*") == 0) {
+                result = num1 * num2;
+
+            } else if (strcmp(argv[2], "/") == 0) {
+                if (num2 == 0) {
+                    print_string("Division by zero is not allowed!\n\n", VGA_COLOR_LIGHT_RED);
+                    return;
+
+                } else {
+                    result = num1 / num2;
+                }
+
+            } else {
+                print_string("Unsupported operation: ", VGA_COLOR_LIGHT_RED);
+                print_string(argv[2], VGA_COLOR_LIGHT_GREY);
+                print_string("\nSupported operations: ", VGA_COLOR_WHITE);
+                print_string("+ - * /\n\n", VGA_COLOR_LIGHT_GREY);
+                return;
+            }
+
+            int_to_str(result, result_buffer, 0);
+
+            print_string("Result: ", VGA_COLOR_WHITE);
+            print_string(result_buffer, VGA_COLOR_LIGHT_GREY);
+            print_string("\n", VGA_COLOR_BLACK);
+        }
 
 
     // Filesystem operations
@@ -172,7 +227,7 @@ void process_command(int argc, char** argv) {
             } else if (ffs_return_code == FFS_BUFFER_TOO_SMALL) {
                 print_string("File too large: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
-                print_string("\n\n", VGA_COLOR_BLACK);
+                print_string("\n", VGA_COLOR_BLACK);
 
             } else {
                 print_string(cat_buffer, VGA_COLOR_LIGHT_GREY);
