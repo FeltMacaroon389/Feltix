@@ -91,7 +91,7 @@ void process_command(int argc, char** argv) {
             }
 
             double num1 = atof(argv[1]);
-            double num2 = atof(argv[2]);
+            double num2 = atof(argv[3]);
             double result;
             char result_buffer[512];
 
