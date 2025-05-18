@@ -1,18 +1,18 @@
 # Feltix
 
-### Feltix is an operating system written in C, with the primary focus on simplicity, modularity, and usablility.
-### Feltix is not intended for production use.
+Feltix is an operating system written in C, with the primary focus on simplicity, modularity, and usablility.
+Feltix is not intended for production use.
 
 ---
 
 ![Feltix boot screen](screenshots/boot_screen.png)
 
 ### Feltix currently supports the following hardware:
-- i386 (x86) or AMD64 (x86_64) CPU,
-- Depending on the firmware, around 3 gigabytes (GB) of RAM,
-- BIOS firmware (not EFI/UEFI),
-- Standard PS/2 and USB keyboards,
-- VGA-text mode display,
+- i386 (x86) or AMD64 (x86_64) CPU
+- Depending on the firmware, around 3 gigabytes of RAM
+- BIOS firmware (not EFI/UEFI)
+- Standard PS/2 and USB keyboards
+- VGA-text mode display
 
 **MORE TO COME**
 
