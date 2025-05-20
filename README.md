@@ -11,7 +11,7 @@ Feltix is not intended for production use.
 - i386 (x86) or AMD64 (x86_64) CPU
 - Depending on the firmware, around 3 gigabytes of RAM
 - BIOS firmware (not EFI/UEFI)
-- Standard PS/2 and USB keyboards
+- Standard PS/2 and USB keyboards (US layout)
 - VGA-text mode display
 
 **MORE TO COME**
