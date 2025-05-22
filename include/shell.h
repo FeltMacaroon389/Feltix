@@ -100,7 +100,12 @@ void process_command(int argc, char** argv) {
             double num1 = atof(argv[1]);
             double num2 = atof(argv[3]);
             double result;
-            char result_buffer[512];
+            char result_buffer[8];
+
+            if (num1 < 0 || num2 < 0) {
+                print_string("Either number being less than zero is not supported!\n\n", VGA_COLOR_LIGHT_RED);
+                return;
+            }
 
             if (strcmp(argv[2], "+") == 0) {
                 result = num1 + num2;
@@ -125,6 +130,11 @@ void process_command(int argc, char** argv) {
                 print_string(argv[2], VGA_COLOR_LIGHT_GREY);
                 print_string("\nSupported operations: ", VGA_COLOR_WHITE);
                 print_string("+ - * /\n\n", VGA_COLOR_LIGHT_GREY);
+                return;
+            }
+
+            if (result < 0) {
+                print_string("Result less than zero not supported!\n\n", VGA_COLOR_LIGHT_RED);
                 return;
             }
 
