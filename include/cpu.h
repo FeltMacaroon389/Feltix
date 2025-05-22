@@ -48,5 +48,28 @@ uint32_t cpu_supports_64bit() {
     return is_64bit_supported;
 }
 
+// Function to get the CPU manufacturer/vendor
+void get_cpu_vendor(char *vendor_buffer) {
+    uint32_t eax, ebx, ecx, edx;
+
+    cpuid(0, &eax, &ebx, &ecx, &edx);
+
+    // The vendor string is stored in EBX, EDX, ECX in that order
+    *(uint32_t *)(vendor_buffer + 0) = ebx;
+    *(uint32_t *)(vendor_buffer + 4) = edx;
+    *(uint32_t *)(vendor_buffer + 8) = ecx;
+    vendor_buffer[12] = '\0';  // Null-terminate string
+}
+
+void get_cpu_brand(char *brand_buffer) {
+    uint32_t *brand_u = (uint32_t*)brand_buffer;
+
+    cpuid(0x80000002, &brand_u[0], &brand_u[1], &brand_u[2], &brand_u[3]);
+    cpuid(0x80000003, &brand_u[4], &brand_u[5], &brand_u[6], &brand_u[7]);
+    cpuid(0x80000004, &brand_u[8], &brand_u[9], &brand_u[10], &brand_u[11]);
+
+    brand_buffer[48] = '\0';
+}
+
 #endif // CPU_H
 

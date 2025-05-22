@@ -344,14 +344,27 @@ void process_command(int argc, char** argv) {
     // Display information about the CPU
     } else if (strcmp(argv[0], "cpuinfo") == 0) {
 
+        // Print CPU manufacturer/vendor
+        char vendor_buffer[13];
+        get_cpu_vendor(vendor_buffer);
+        print_string("Vendor: ", VGA_COLOR_WHITE);
+        print_string(vendor_buffer, VGA_COLOR_LIGHT_GREY);
+
+        // Print CPU brand (model)
+        char brand_buffer[48];
+        get_cpu_brand(brand_buffer);
+
+        print_string("\nModel: ", VGA_COLOR_WHITE);
+        print_string(brand_buffer, VGA_COLOR_LIGHT_GREY);
+
         // Print CPU threads
         char* cpu_threads = get_cpu_threads();
 
-        print_string("CPU threads: ", VGA_COLOR_WHITE);
+        print_string("\nThreads: ", VGA_COLOR_WHITE);
         print_string(cpu_threads, VGA_COLOR_LIGHT_GREY);
 
         // Print CPU architecture
-        print_string("\nCPU architecture: ", VGA_COLOR_WHITE);
+        print_string("\nArchitecture: ", VGA_COLOR_WHITE);
 
         uint32_t is_64bit_supported = cpu_supports_64bit();
 
