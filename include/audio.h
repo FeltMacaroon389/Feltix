@@ -11,6 +11,12 @@
 #define SPEAKER_CONTROL  0x61
 
 void beep(uint32_t frequency) {
+
+    // Refuse to beep at 0MHz, to prevent a division by zero
+    if (frequency == 0) {
+        return;
+    }
+
     uint32_t divisor = 1193180 / frequency;
 
     // Set PIT channel 2 to square wave mode (mode 3)

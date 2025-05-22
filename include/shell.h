@@ -118,6 +118,12 @@ void process_command(int argc, char** argv) {
             // Convert frequency to a double
             double frequency = atof(argv[1]);
 
+            // Refuse to beep at 0MHz (to prevent dividing by zero)
+            if (frequency == 0) {
+                print_string("Beeping at 0MHz is not allowed!\n\n", VGA_COLOR_LIGHT_RED);
+                return;
+            }
+
             // Beep with the desired frequency
             beep(frequency);
 
