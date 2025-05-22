@@ -12,6 +12,7 @@
 #include <cpu.h>
 #include <memory.h>
 #include <ffs.h>
+#include <audio.h>
 
 // Function to process parsed shell commands
 void process_command(int argc, char** argv) {
@@ -31,6 +32,10 @@ void process_command(int argc, char** argv) {
 
         print_string("  reboot                          ", VGA_COLOR_LIGHT_GREY);
         print_string("- Reboot the system\n", VGA_COLOR_WHITE);
+
+        print_string("  beep ", VGA_COLOR_LIGHT_GREY);
+        print_string("<frequency>/stop         ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("- Beep the PC speaker, or stop beeping\n", VGA_COLOR_WHITE);
 
         print_string("  math ", VGA_COLOR_LIGHT_GREY);
         print_string("<num1> <operation> <num2>  ", VGA_COLOR_LIGHT_MAGENTA);
@@ -85,6 +90,46 @@ void process_command(int argc, char** argv) {
     } else if (strcmp(argv[0], "reboot") == 0) {
         reboot_system();
 
+    // Beep the PC speaker
+    } else if (strcmp(argv[0], "beep") == 0) {
+
+        // Check for sufficient arguments
+        if (!argv[1]) {
+            print_string("Usage: ", VGA_COLOR_WHITE);
+            print_string("beep ", VGA_COLOR_LIGHT_GREY);
+            print_string("<frequency>/stop\n\n", VGA_COLOR_LIGHT_MAGENTA);
+            return;
+        }
+
+        // Check for stop
+        if (strcmp(argv[1], "stop") == 0) {
+            stop_beep();
+            print_string("Successfully stopped beeping!\n\n", VGA_COLOR_WHITE);
+            return;
+
+        } else {
+
+            // Frequency must be a number
+            if (is_valid_float(argv[1]) == 1) {
+                print_string("Frequency must be a number!\n\n", VGA_COLOR_LIGHT_GREY);
+                return;
+            }
+
+            // Convert frequency to a double
+            double frequency = atof(argv[1]);
+
+            // Beep with the desired frequency
+            beep(frequency);
+
+            print_string("PC speaker beeping at ", VGA_COLOR_WHITE);
+            print_string(argv[1], VGA_COLOR_LIGHT_GREY);
+            print_string("MHz\n", VGA_COLOR_LIGHT_GREY);
+            print_string("Run: ", VGA_COLOR_WHITE);
+            print_string("beep ", VGA_COLOR_LIGHT_GREY);
+            print_string("stop", VGA_COLOR_LIGHT_MAGENTA);
+            print_string(" to stop beeping\n\n", VGA_COLOR_WHITE);
+        }
+
     // Basic math operations
     } else if (strcmp(argv[0], "math") == 0) {
 
@@ -93,9 +138,11 @@ void process_command(int argc, char** argv) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("math ", VGA_COLOR_LIGHT_GREY);
             print_string("<num1> <operation> <num2>\n\n", VGA_COLOR_LIGHT_MAGENTA);
+            return;
 
-        // Math can only be performed on numbers
         } else {
+
+            // Math can only be performed on numbers
             if (is_valid_float(argv[1]) || is_valid_float(argv[3]) == 1) {
                 print_string("Math cannot be performed on non-numbers!\n\n", VGA_COLOR_LIGHT_RED);
                 return;

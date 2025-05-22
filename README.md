@@ -13,6 +13,7 @@ Feltix is not intended for production use.
 - BIOS firmware (not EFI/UEFI)
 - Standard PS/2 and USB keyboards (US layout)
 - VGA-text mode display
+- Standard PC speaker/beeper
 
 **MORE TO COME**
 
