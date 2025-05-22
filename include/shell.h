@@ -16,6 +16,7 @@
 // Function to process parsed shell commands
 void process_command(int argc, char** argv) {
 
+    // Display supported commands and their descriptions
     if (strcmp(argv[0], "help") == 0) {
         print_string("Available commands:\n", VGA_COLOR_WHITE);
 
@@ -63,7 +64,7 @@ void process_command(int argc, char** argv) {
         print_string("  raminfo                         ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display accessible memory in megabytes\n\n", VGA_COLOR_WHITE);
 
-
+    // Display licensing information
     } else if (strcmp(argv[0], "license") == 0) {
         print_string("Feltix", VGA_COLOR_LIGHT_GREY);
         print_string(" is licensed under the ", VGA_COLOR_WHITE);
@@ -76,47 +77,54 @@ void process_command(int argc, char** argv) {
 
         print_string("https://github.com/FeltMacaroon389/Feltix\n\n", VGA_COLOR_LIGHT_BLUE);
 
-
+    // Clear the VGA screen
     } else if (strcmp(argv[0], "clear") == 0) {
         clear_screen();
 
-
+    // Reboot the system
     } else if (strcmp(argv[0], "reboot") == 0) {
         reboot_system();
 
-
+    // Basic math operations
     } else if (strcmp(argv[0], "math") == 0) {
+
+        // Check for sufficient arguments
         if (argc < 4) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("math ", VGA_COLOR_LIGHT_GREY);
             print_string("<num1> <operation> <num2>\n\n", VGA_COLOR_LIGHT_MAGENTA);
 
+        // Math can only be performed on numbers
         } else {
             if (is_valid_float(argv[1]) || is_valid_float(argv[3]) == 1) {
                 print_string("Math cannot be performed on non-numbers!\n\n", VGA_COLOR_LIGHT_RED);
                 return;
             }
 
+            // Convert arguments to their respective data types
             double num1 = atof(argv[1]);
             double num2 = atof(argv[3]);
+
+            // Declare result and buffer
             double result;
             char result_buffer[8];
 
-            if (num1 < 0 || num2 < 0) {
-                print_string("Either number being less than zero is not supported!\n\n", VGA_COLOR_LIGHT_RED);
-                return;
-            }
-
+            // Addition
             if (strcmp(argv[2], "+") == 0) {
                 result = num1 + num2;
 
+            // Subtraction
             } else if (strcmp(argv[2], "-") == 0) {
                 result = num1 - num2;
 
+            // Multiplication
             } else if (strcmp(argv[2], "*") == 0) {
                 result = num1 * num2;
 
+            // Division
             } else if (strcmp(argv[2], "/") == 0) {
+
+                // Division by zero is not allowed
                 if (num2 == 0) {
                     print_string("Division by zero is not allowed!\n\n", VGA_COLOR_LIGHT_RED);
                     return;
@@ -125,6 +133,7 @@ void process_command(int argc, char** argv) {
                     result = num1 / num2;
                 }
 
+            // If operation is unknown
             } else {
                 print_string("Unsupported operation: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[2], VGA_COLOR_LIGHT_GREY);
@@ -133,11 +142,13 @@ void process_command(int argc, char** argv) {
                 return;
             }
 
+            // Result cannot be less than zero (for now)
             if (result < 0) {
                 print_string("Result less than zero not supported!\n\n", VGA_COLOR_LIGHT_RED);
                 return;
             }
 
+            // Convert to string, and print
             int_to_str(result, result_buffer, 0);
 
             print_string("Result: ", VGA_COLOR_WHITE);
@@ -145,31 +156,36 @@ void process_command(int argc, char** argv) {
             print_string("\n", VGA_COLOR_BLACK);
         }
 
-
-    // Filesystem operations
+    // List all files currently in Felt File System (FFS)
     } else if (strcmp(argv[0], "ls") == 0) {
         ffs_list_files();
 
-
+    // Create an empty file
     } else if (strcmp(argv[0], "touch") == 0) {
+
+        // Check for sufficient arguments
         if (!argv[1]) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("touch ", VGA_COLOR_LIGHT_GREY);
             print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
 
+        // Check return code from FFS
         } else {
             int ffs_return_code = ffs_create_file(argv[1]);
 
+            // Invalid name
             if (ffs_return_code == FFS_INVALID_NAME) {
                 print_string("Filename too long: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
 
+            // File exists
             } else if (ffs_return_code == FFS_FILE_EXISTS) {
                 print_string("File exists: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
 
+            // No space
             } else if (ffs_return_code == FFS_NO_SPACE) {
                 print_string("No space left. ", VGA_COLOR_LIGHT_RED);
                 print_string("Please delete a file to make space", VGA_COLOR_WHITE);
@@ -177,45 +193,54 @@ void process_command(int argc, char** argv) {
             }
         }
 
-
+    // Delete a file from Felt File System
     } else if (strcmp(argv[0], "rm") == 0) {
+
+        // Check for sufficient arguments
         if (!argv[1]) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("rm ", VGA_COLOR_LIGHT_GREY);
             print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
 
+        // Check return code from FFS
         } else {
             int ffs_return_code = ffs_delete_file(argv[1]);
 
-           if (ffs_return_code == FFS_FILE_NOT_FOUND) {
+            // File not found
+            if (ffs_return_code == FFS_FILE_NOT_FOUND) {
                 print_string("File not found: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
             }
         }
 
-
+    // Write data to a file in Felt File System
     } else if (strcmp(argv[0], "write") == 0) {
+
+        // Check for sufficient arguments
         if (argc < 3) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("write ", VGA_COLOR_LIGHT_GREY);
             print_string("<filename> <data>\n\n", VGA_COLOR_LIGHT_MAGENTA);
 
+        // Combine all arguments after argv[1] into a single string
         } else {
-            // Combine all arguments after argv[1] into a single data string
             char data[4096] = {0};  // Max combined size (4KB)
             for (int i = 2; i < argc; ++i) {
                 strcat(data, argv[i]);
                 if (i < argc - 1) strcat(data, " ");
             }
 
+            // Check return code from FFS
             int ffs_return_code = ffs_write_file(argv[1], data);
 
+            // File not found
             if (ffs_return_code == FFS_FILE_NOT_FOUND) {
                 print_string("File not found: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
 
+            // Data size exceeds limit
             } else if (ffs_return_code == FFS_SIZE_EXCEEDS_LIMIT) {
                 print_string("File exceeds limit: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
@@ -223,40 +248,47 @@ void process_command(int argc, char** argv) {
             }
         }
 
-
+    // Read a file from Felt File System
     } else if (strcmp(argv[0], "cat") == 0) {
+
+        // Check for sufficient arguments
         if (!argv[1]) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("cat ", VGA_COLOR_LIGHT_GREY);
             print_string("<filename>\n\n", VGA_COLOR_LIGHT_MAGENTA);
 
         } else {
+            // Declare buffer
             char cat_buffer[4096];  // 4KB
             size_t cat_buffer_size = sizeof(cat_buffer);
 
+            // Check return code from FFS
             int ffs_return_code = ffs_read_file(argv[1], cat_buffer, cat_buffer_size);
 
+            // File not found
             if (ffs_return_code == FFS_FILE_NOT_FOUND) {
                 print_string("File not found: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
 
+            // Buffer too small (file too large)
             } else if (ffs_return_code == FFS_BUFFER_TOO_SMALL) {
                 print_string("File too large: ", VGA_COLOR_LIGHT_RED);
                 print_string(argv[1], VGA_COLOR_LIGHT_GREY);
                 print_string("\n", VGA_COLOR_BLACK);
 
+            // If OK, print the buffer
             } else {
                 print_string(cat_buffer, VGA_COLOR_LIGHT_GREY);
                 print_string("\n\n", VGA_COLOR_BLACK);
             }
         }
 
-
+    // Trigger kernel panic
     } else if (strcmp(argv[0], "panic") == 0) {
         kernel_panic("ManuallyTriggeredByUser");
 
-
+    // Display information about the CPU
     } else if (strcmp(argv[0], "cpuinfo") == 0) {
 
         // Print CPU threads
@@ -277,7 +309,7 @@ void process_command(int argc, char** argv) {
             print_string("x86_64\n\n", VGA_COLOR_LIGHT_GREY);
         }
 
-
+    // Display all accessible memory in megabytes
     } else if (strcmp(argv[0], "raminfo") == 0) {
         char* memory_mb = get_accessible_memory();
 
@@ -285,7 +317,7 @@ void process_command(int argc, char** argv) {
         print_string(memory_mb, VGA_COLOR_LIGHT_GREY);
         print_string("MB\n\n", VGA_COLOR_LIGHT_GREY);
 
-
+    // If command not recognized
     } else {
         print_string("Unknown command: ", VGA_COLOR_LIGHT_RED);
         print_string(argv[0], VGA_COLOR_LIGHT_GREY);
@@ -334,20 +366,20 @@ void shell_start(const char* prompt, uint8_t color) {
             if (!character)
                 continue;  // Skip unmapped scancodes
 
+            // On newline, print the newline character and break out
             if (character == '\n') {
-                // On newline, print the newline character and break out
                 print_string("\n", VGA_COLOR_WHITE);
                 break;
 
+            // Handle backspace, remove last character if available
             } else if (character == '\b') {
-                // Handle backspace, remove last character if available
                 if (input_index > 0) {
                     input_index--;
                     shell_backspace();
                 }
 
+            // Add the character to our input buffer if there is space
             } else {
-                // Add the character to our input buffer if there is space
                 if (input_index < sizeof(input_buffer) - 1) {
                     input_buffer[input_index++] = character;
                     print_char(character, VGA_COLOR_WHITE);
