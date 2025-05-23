@@ -6,6 +6,7 @@
 #include <vga.h>
 #include <keyboard.h>
 #include <power.h>
+#include <audio.h>
 
 // Function to trigger a kernel panic with a custom message
 void kernel_panic(const char* message) {
@@ -24,6 +25,9 @@ void kernel_panic(const char* message) {
     print_string(message, VGA_COLOR_LIGHT_BLUE);
 
     print_string("\n\n Press any key to reboot...", VGA_COLOR_WHITE);
+
+    // Short beep to get the user's attention
+    short_beep();
 
     // Wait for keypress
     keyboard_getchar();

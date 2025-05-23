@@ -34,7 +34,11 @@ void process_command(int argc, char** argv) {
         print_string("- Reboot the system\n", VGA_COLOR_WHITE);
 
         print_string("  beep ", VGA_COLOR_LIGHT_GREY);
-        print_string("<frequency>/stop         ", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("<frequency>", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("/", VGA_COLOR_DARK_GREY);
+        print_string("stop", VGA_COLOR_LIGHT_MAGENTA);
+        print_string("/", VGA_COLOR_DARK_GREY);
+        print_string("short     ", VGA_COLOR_LIGHT_MAGENTA);
         print_string("- Beep the PC speaker, or stop beeping\n", VGA_COLOR_WHITE);
 
         print_string("  math ", VGA_COLOR_LIGHT_GREY);
@@ -97,7 +101,11 @@ void process_command(int argc, char** argv) {
         if (!argv[1]) {
             print_string("Usage: ", VGA_COLOR_WHITE);
             print_string("beep ", VGA_COLOR_LIGHT_GREY);
-            print_string("<frequency>/stop\n\n", VGA_COLOR_LIGHT_MAGENTA);
+            print_string("<frequency>", VGA_COLOR_LIGHT_MAGENTA);
+            print_string("/", VGA_COLOR_DARK_GREY);
+            print_string("stop", VGA_COLOR_LIGHT_MAGENTA);
+            print_string("/", VGA_COLOR_DARK_GREY);
+            print_string("short\n\n", VGA_COLOR_LIGHT_MAGENTA);
             return;
         }
 
@@ -105,6 +113,11 @@ void process_command(int argc, char** argv) {
         if (strcmp(argv[1], "stop") == 0) {
             stop_beep();
             print_string("Successfully stopped beeping!\n\n", VGA_COLOR_WHITE);
+            return;
+
+        // Check for short
+        } else if (strcmp(argv[1], "short") == 0) {
+            short_beep();
             return;
 
         } else {
