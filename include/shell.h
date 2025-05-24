@@ -124,7 +124,7 @@ void process_command(int argc, char** argv) {
 
             // Frequency must be a number
             if (is_valid_float(argv[1]) == 1) {
-                print_string("Frequency must be a number!\n\n", VGA_COLOR_LIGHT_GREY);
+                print_string("Frequency must be a number!\n\n", VGA_COLOR_LIGHT_RED);
                 return;
             }
 
@@ -360,6 +360,7 @@ void process_command(int argc, char** argv) {
         // Print CPU manufacturer/vendor
         char vendor_buffer[13];
         get_cpu_vendor(vendor_buffer);
+
         print_string("Vendor: ", VGA_COLOR_WHITE);
         print_string(vendor_buffer, VGA_COLOR_LIGHT_GREY);
 
