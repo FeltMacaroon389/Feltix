@@ -15,6 +15,12 @@ SRC_DIR = src
 OBJ_DIR = obj
 BUILD_DIR = build
 
+# C source files to compile
+SRC_C := $(wildcard $(SRC_DIR)/*.c)
+
+# C objects after compilation
+OBJ_C := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_C))
+
 # Output image name
 OUT_IMG = feltix.img
 
@@ -47,13 +53,21 @@ help:
 	@echo " "
 
 # Build the image
-$(OUT_IMG):
+$(OUT_IMG): $(OBJ_C)
 	mkdir -p $(OBJ_DIR) $(BUILD_DIR)
 
-	$(AS) $(ASFLAGS) $(SRC_DIR)/boot.asm -o $(OBJ_DIR)/boot.o
-	$(CC) $(CCFLAGS) $(SRC_DIR)/kernel.c $(OBJ_DIR)/boot.o -o $(OBJ_DIR)/feltix.elf
+	$(AS) $(ASFLAGS) $(SRC_DIR)/bootloader/boot.asm -o $(OBJ_DIR)/boot.o
+	$(CC) $(CCFLAGS) $(OBJ_C) $(OBJ_DIR)/boot.o -o $(BUILD_DIR)/kernel.elf
 	
-	$(OBJCOPY) $(OBJCOPYFLAGS) $(OBJ_DIR)/feltix.elf $(BUILD_DIR)/$(OUT_IMG)
+	$(OBJCOPY) $(OBJCOPYFLAGS) $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/$(OUT_IMG)
+
+# Compile C source files
+obj/%.o: src/%.c | obj
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+# Create obj directory if missing
+obj:
+	mkdir -p $(OBJ_DIR)
 
 # Run the image in an emulator
 run: $(OUT_IMG)
