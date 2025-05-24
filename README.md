@@ -21,7 +21,7 @@ Feltix is not intended for production use.
 
 ### Build instructions
 
-- Install [dependencies](https://github.com/FeltMacaroon389/Feltix/tree/master#dependency-installation)
+- Install dependencies (see below).
 
 - Clone the repository: `git clone https://github.com/FeltMacaroon389/Feltix.git`
 
