@@ -62,11 +62,11 @@ $(OUT_IMG): $(OBJ_C)
 	$(OBJCOPY) $(OBJCOPYFLAGS) $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/$(OUT_IMG)
 
 # Compile C source files
-obj/%.o: src/%.c | obj
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 # Create obj directory if missing
-obj:
+$(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 # Run the image in an emulator
