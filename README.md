@@ -63,3 +63,5 @@ The output image will be located in the `build` directory.
 **Debian/Ubuntu**:
 - Run: `sudo apt update && sudo apt install qemu`
 
+## License
+Feltix is licensed under the **GNU GPLv3** license. A copy of this license can be found at `LICENSE`
