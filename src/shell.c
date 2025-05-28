@@ -24,6 +24,9 @@ void process_command(int argc, char** argv) {
         print_string("  help                            ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display this help menu\n", VGA_COLOR_WHITE);
 
+        print_string("  exit                            ", VGA_COLOR_LIGHT_GREY);
+        print_string("- Exit the shell\n", VGA_COLOR_WHITE);
+
         print_string("  license                         ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display licensing information\n", VGA_COLOR_WHITE);
 
@@ -72,6 +75,8 @@ void process_command(int argc, char** argv) {
 
         print_string("  raminfo                         ", VGA_COLOR_LIGHT_GREY);
         print_string("- Display accessible memory in megabytes\n\n", VGA_COLOR_WHITE);
+
+    // Exit is handled in shell_start
 
     // Display licensing information
     } else if (strcmp(argv[0], "license") == 0) {
@@ -471,7 +476,14 @@ void shell_start(const char* prompt, uint8_t color) {
         input_buffer[input_index] = '\0';
 
         if (strcmp(input_buffer, "") != 0) {
-            parse_user_input(input_buffer);
+
+            // Handle exit
+            if (strcmp(input_buffer, "exit") == 0) {
+                return;
+
+            } else {
+                parse_user_input(input_buffer);
+            }
         }
     }
 }
