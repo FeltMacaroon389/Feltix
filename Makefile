@@ -3,11 +3,13 @@
 # Tools
 AS = nasm
 CC = i386-elf-gcc
+LD = i386-elf-ld
 OBJCOPY = i386-elf-objcopy
 
 # Parameters
 ASFLAGS = -f elf32
 CCFLAGS = -nostdlib -ffreestanding -std=gnu99 -T linker.ld -I./include
+LDFLAGS = -T linker.ld
 OBJCOPYFLAGS = -O binary
 
 # Directories
@@ -57,7 +59,7 @@ $(OUT_IMG): $(OBJ_C)
 	mkdir -p $(OBJ_DIR) $(BUILD_DIR)
 
 	$(AS) $(ASFLAGS) $(SRC_DIR)/bootloader/boot.asm -o $(OBJ_DIR)/boot.o
-	$(CC) $(CCFLAGS) $(OBJ_C) $(OBJ_DIR)/boot.o -o $(BUILD_DIR)/kernel.elf
+	$(LD) $(LDFLAGS) $(OBJ_C) $(OBJ_DIR)/boot.o -o $(BUILD_DIR)/kernel.elf
 	
 	$(OBJCOPY) $(OBJCOPYFLAGS) $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/$(OUT_IMG)
 
