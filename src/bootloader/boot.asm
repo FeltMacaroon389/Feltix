@@ -43,7 +43,7 @@ _start:
 
 	; Load sectors from disk
 	; Special thanks to @RobocraftYT on GitHub for this part
-	mov [disk], dl 		; Stashing disk number
+	mov [disk], dl 		; Disk number
 	mov ah, 0x2 		; BIOS interrupt for reading sectors from disk
 	mov al, [sectors]	; Sectors to load
 	mov ch, 0 		; Cylinder index
