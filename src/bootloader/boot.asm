@@ -7,7 +7,7 @@ section .bootloader
 BITS 16
 
 ; Define program entrypoint
-global start
+global _start
 
 ; Disk variable
 disk db 0
@@ -19,7 +19,7 @@ sectors db 30
 
 ; Program entrypoint
 ; Here we generally just focus on loading additional sectors and getting 32-bit protected mode up and running
-start:
+_start:
 	; Disable hardware interrupts
 	cli
 	
