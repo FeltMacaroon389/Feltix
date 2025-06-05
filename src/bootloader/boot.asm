@@ -49,7 +49,7 @@ _start:
 	mov ch, 0 		; Cylinder index
 	mov dh, 0 		; Head index
 	mov cl, 2 		; Sector index
-	mov bx, main	 	; Target pointer (MUST be after the boot sector)
+	mov bx, kernel_wrapper 	; Target pointer (MUST be after the boot sector)
 	int 0x13 		; Call BIOS
 	jc .disk_error		; Jump to .disk_error upon failure
 	
@@ -176,17 +176,17 @@ gdt32_definition:
 ; 32-bit protected mode entry
 BITS 32
 protected_mode_entry:
-	; Reload the segment registers
-	mov ax, 0x10	; Load the data segment descriptor (index 2)
-	mov ds, ax	; Set DS
-	mov es, ax	; Set ES
-	mov ss, ax	; Set SS (stack segment)
+	; Refresh segment registers
+	mov ax, 0x10	; Load the data segment descriptor
+	mov ds, ax
+	mov es, ax
+	mov ss, ax	; Stack segment
 
-	; Set up the stack (32-bit ESP)
+	; Set up a stack (32-bit ESP)
 	mov esp, 0x10000	; Set the stack pointer
 	
-	; Jump to the main userspace function
-	jmp 0x08:main	; Far jump
+	; Far jump to the kernel wrapper function
+	jmp 0x08:kernel_wrapper
 
 
 ; Other BIOS boot sector formalities
@@ -198,11 +198,11 @@ dw 0xAA55			; Boot signature
 BITS 32
 
 
-; Main function
-main:
+; Kernel wrapper function
+kernel_wrapper:
 	; Disable hardware interrupts
 	cli
-	
+
 	; Call kernel_main
 	extern kernel_main
 	call kernel_main
