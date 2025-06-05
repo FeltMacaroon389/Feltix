@@ -23,11 +23,20 @@ start:
 	; Disable hardware interrupts
 	cli
 	
-        ; Set up segment registers
-        xor ax, ax      ; Set AX
-        mov ds, ax      ; Set DS
-        mov es, ax      ; Set ES
-	
+        ; Null out segment registers
+	xor ax, ax
+	mov ds, ax
+	mov es, ax
+
+	; Set a simple stack
+	mov ax, 0x7A00
+	mov ss, ax
+	mov ax, 0xFFFE
+	mov sp, ax
+
+	; Enable hardware interrupts
+	sti
+
 	; Print boot message
 	mov si, boot_message
 	call print_string_16
@@ -62,6 +71,9 @@ start:
 
 ; Upon a disk error
 .disk_error:
+	; Disable hardware interrupts
+	cli
+
 	; Print error message
 	mov si, disk_error_message
 	call print_string_16
@@ -73,8 +85,11 @@ start:
 	mov al, 0FEh		; Reset command for 8042
 	out 64h, al		; Send to keyboard controller
 
-	; If that fails, try unknown
+	; If that fails, try undefined
 	ud2
+
+	; If that still doesn't do the trick, settle with a hlt
+	hlt
 
 ; Boot message
 boot_message db "Booting Feltix...", 0x0A, 0x0A, 0
@@ -168,7 +183,7 @@ protected_mode_entry:
 	mov ss, ax	; Set SS (stack segment)
 
 	; Set up the stack (32-bit ESP)
-	mov esp, 0x10000	; Set up the stack pointer
+	mov esp, 0x10000	; Set the stack pointer
 	
 	; Jump to the main userspace function
 	jmp 0x08:main	; Far jump
