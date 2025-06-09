@@ -33,6 +33,7 @@ _start:
 	mov ss, ax
 	mov ax, 0xFFFE
 	mov sp, ax
+ mov bp, sp
 
 	; Enable hardware interrupts
 	sti
