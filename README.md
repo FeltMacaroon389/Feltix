@@ -12,7 +12,7 @@ Feltix is not intended for production use.
 - Depending on the firmware, around 3 gigabytes of RAM
 - BIOS firmware (not EFI/UEFI)
 - Standard PS/2 and USB keyboards (US layout)
-- 16-color VGA-text mode display
+- 16-color 80*25 VGA text mode display
 - Standard PC speaker/beeper
 
 **MORE TO COME**
